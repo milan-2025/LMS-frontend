@@ -1,0 +1,15 @@
+.active-nav-link {
+  color: #22c55e;
+  /* text-decoration: underline; */
+}
+
+.nav-link {
+  color: #ffffff;
+}
+/* .nav-link-hover.MuiButtonBase-root-MuiButton-root.css-1shvmso-MuiButtonBase-root-MuiButton-root:hover {
+  color: "#22C55E";
+} */
+
+.nav-link-hover:hover {
+  color: #22c55e;
+}
