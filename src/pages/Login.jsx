@@ -68,7 +68,12 @@ const Login = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (emailError.chk && passwordError.chk) {
+    if (
+      didEmailEdit &&
+      didPasswordEdit &&
+      emailError.chk &&
+      passwordError.chk
+    ) {
       setCanLogin(true)
     } else {
       setCanLogin(false)
@@ -91,6 +96,7 @@ const Login = () => {
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: loginUser,
+    retry: false,
     onSuccess: (data) => {
       console.log("user logged in successfully")
       // console.log("data", data)
@@ -110,16 +116,18 @@ const Login = () => {
 
   const handleLoginButton = () => {
     if (
-      (emailError && !emailError.chk) ||
-      (passwordError && !passwordError.chk)
+      didEmailEdit &&
+      didPasswordEdit &&
+      emailError.chk &&
+      passwordError.chk
     ) {
-      emailBlur()
-      passwordBlur()
-    } else {
       mutate({
         email: email,
         password: password,
       })
+    } else {
+      emailBlur()
+      passwordBlur()
     }
   }
 
@@ -149,7 +157,7 @@ const Login = () => {
       justifyContent={"center"}
     >
       <Grid
-        mt={"7rem"}
+        mt={"5rem"}
         container
         size={{
           md: 4,

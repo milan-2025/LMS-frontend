@@ -1,7 +1,12 @@
 import * as React from "react"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
-import { createBrowserRouter, redirect, RouterProvider } from "react-router-dom"
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+  useNavigate,
+} from "react-router-dom"
 import RootLayout from "./pages/RootLayout"
 import Login from "./pages/Login"
 import SignUp from "./pages/SignUp"
@@ -16,6 +21,8 @@ import { handleLogin, handleLogout } from "./store/userSlice"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "./util/http"
 import Leads from "./pages/Leads"
+import { LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 
 const router = createBrowserRouter([
   {
@@ -72,6 +79,9 @@ function App() {
             main: "#1C2620",
             light: "#161D1A",
           },
+          text: {
+            main: "#D3D3D3",
+          },
         },
       }),
     []
@@ -95,6 +105,7 @@ function App() {
       )
     }
   }, [])
+  // const navigate = useNavigate()
 
   React.useEffect(() => {
     if (!token) {
@@ -103,11 +114,14 @@ function App() {
 
     if (isTokenExpired()) {
       dispatch(handleLogout())
-      return
+      // navigate("/")
+      return redirect("/")
     }
     const duration = getRemaningTokenDuration()
     let timer = setTimeout(() => {
       dispatch(handleLogout())
+      // navigate("/")
+      return redirect("/")
     }, duration)
 
     return () => clearTimeout(timer)
@@ -118,7 +132,9 @@ function App() {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kicks off a consistent baseline style, including a dark or light background */}
         <CssBaseline />
-        <RouterProvider router={router} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <RouterProvider router={router} />
+        </LocalizationProvider>
       </ThemeProvider>
     </QueryClientProvider>
   )

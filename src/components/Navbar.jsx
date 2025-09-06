@@ -9,6 +9,7 @@ import "./Navbar.css"
 import { useTheme } from "@mui/material/styles"
 import { useDispatch, useSelector } from "react-redux"
 import { handleLogout } from "../store/userSlice"
+import { useEffect, useRef, useState } from "react"
 // import IconButton from '@mui/material/IconButton';
 // import MenuIcon from '@mui/icons-material/Menu';
 
@@ -63,24 +64,49 @@ export default function Navbar() {
       </>
     )
   }
+  const appBarRef = useRef(null) // Create a ref for the AppBar
+  const [appBarHeight, setAppBarHeight] = useState(0)
+
+  useEffect(() => {
+    if (appBarRef.current) {
+      // Access the DOM element's height
+      setAppBarHeight(appBarRef.current.offsetHeight)
+    }
+
+    // Optional: Recalculate height on window resize
+    const handleResize = () => {
+      if (appBarRef.current) {
+        setAppBarHeight(appBarRef.current.offsetHeight)
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        sx={{
-          backgroundColor: "secondary.main",
-        }}
-        position="fixed"
-      >
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Univasion CRM
-          </Typography>
+    <>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar
+          sx={{
+            backgroundColor: "secondary.main",
+          }}
+          position="fixed"
+          ref={appBarRef}
+        >
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Univasion CRM
+            </Typography>
 
-          {/* <NavLink> */}
+            {/* <NavLink> */}
 
-          {/* </NavLink> */}
-          {content}
-          {/* <IconButton
+            {/* </NavLink> */}
+            {content}
+            {/* <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -89,8 +115,10 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton> */}
-        </Toolbar>
-      </AppBar>
-    </Box>
+          </Toolbar>
+        </AppBar>
+      </Box>
+      <Box sx={{ height: appBarHeight }} />
+    </>
   )
 }

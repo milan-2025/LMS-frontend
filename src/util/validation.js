@@ -26,3 +26,11 @@ export function isInteger(value) {
     message: "Enter a valid Phone Number.",
   }
 }
+
+export function doConfimPasswordMatch(value, password) {
+  console.log(value, password)
+  return {
+    chk: String(value) == String(password),
+    message: "Confirm Password and Password do not match.",
+  }
+}

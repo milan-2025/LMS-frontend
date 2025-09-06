@@ -23,6 +23,7 @@ const userSlice = createSlice({
     handleLogout: (state) => {
       state.token = null
       state.expirationTime = null
+
       handleLocalStorageLogout()
     },
   },
