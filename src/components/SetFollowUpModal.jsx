@@ -14,8 +14,10 @@ import WatchLaterIcon from "@mui/icons-material/WatchLater"
 import { useDispatch } from "react-redux"
 import { showAlert } from "../store/AlertSlice"
 import { useMutation } from "@tanstack/react-query"
-import { addFollowUp } from "../util/http"
+import { addFollowUp, queryClient } from "../util/http"
 import { startLoader, stopLoader } from "../store/loaderSlice"
+import { chkAndReplaceFollowUpIds } from "../util/followups"
+import { addLeadAction } from "../store/leadActionSlice"
 
 const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
   const timezones = [
@@ -36,6 +38,9 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
     p: 2,
   }
 
+  const selectedTimezone = timezones.find((timeZ) => {
+    return timeZ.name.toLowerCase() == timeZone.toLowerCase()
+  }).id
   const openDateSelector = () => {
     setOpenDateModal(true)
   }
@@ -45,41 +50,70 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
   const [openDateModal, setOpenDateModal] = useState(false)
   const [openTimeModal, setOpenTimeModal] = useState(false)
 
-  const [date, setDate] = useState(null)
+  const [date, setDate] = useState(dayjs().tz(selectedTimezone).startOf("day"))
+  const [displayDate, setDisplayDate] = useState(null)
 
   const [time, setTime] = useState(null)
   const [canSelectTime, setCanSelectTime] = useState(false)
 
   dayjs.extend(utc)
   dayjs.extend(timezonePlugin)
-  const selectedTimezone = timezones.find((timeZ) => {
-    return timeZ.name.toLowerCase() == timeZone.toLowerCase()
-  }).id
   //   const [minTime, setMinTime] = useState(dayjs().tz(selectedTimezone))
-  const shouldDisableDate = (date) => {
-    if (selectedTimezone) {
-      const todayInTimezone = dayjs().tz(selectedTimezone).startOf("day")
-      return date.isBefore(todayInTimezone, "day")
-    } else {
-      const today = dayjs().startOf("day")
-      return date.isBefore(today, "day")
-    }
-  }
+  // const shouldDisableDate = (date) => {
+  //   if (selectedTimezone) {
+  //     const todayInTimezone = dayjs().tz(selectedTimezone).startOf("day")
+  //     console.log("today", todayInTimezone)
+  //     console.log("today", selectedTimezone)
+  //     console.log("date", date.tz(selectedTimezone))
+
+  //     return date
+  //       .tz(selectedTimezone)
+  //       .startOf("day")
+  //       .isBefore(todayInTimezone, "day")
+  //   } else {
+  //     const today = dayjs().startOf("day")
+  //     return date.isBefore(today, "day")
+  //   }
+  // }
+  console.log("selected tz", selectedTimezone)
 
   const currentTimezone = dayjs().tz(selectedTimezone)
   let isTodayInTimezone = null
-  if (date) {
+  if (displayDate) {
+    console.log("date in display", date)
     isTodayInTimezone = date.isSame(currentTimezone, "day")
   }
   const minTime = isTodayInTimezone ? currentTimezone : null
 
   const dispatch = useDispatch()
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
 
   const { mutate, isError, isPending, error } = useMutation({
     mutationFn: addFollowUp,
     retry: 0,
     onSuccess: (data) => {
+      queryClient
+        .invalidateQueries({
+          queryKey: ["leads"],
+        })
+        .then(() => {
+          setDisplayDate(null)
+          setDate(null)
+          setTime(null)
+          setCanSelectTime(false)
+
+          setOpenModal(false)
+        })
       dispatch(stopLoader())
+      dispatch(
+        addLeadAction({
+          leadId: leadId,
+          name: "Set Follow Up",
+          isCompleted: true,
+        })
+      )
       dispatch(
         showAlert({
           isVisible: true,
@@ -109,10 +143,6 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
         leadId: leadId,
         timeZone: timeZone,
       })
-      setDate(null)
-      setTime(null)
-      setCanSelectTime(false)
-      setOpenModal(false)
     } else {
       dispatch(
         showAlert({
@@ -184,7 +214,7 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
                   fullWidth
                   endIcon={<CalendarIcon />}
                 >
-                  {date ? date.format("DD/MM/YYYY") : "Set Date"}
+                  {displayDate ? displayDate.format("DD/MM/YYYY") : "Set Date"}
                 </Button>
               </Grid>
               <Grid size={5} textAlign={"end"}>
@@ -223,6 +253,8 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
         <DateCalendar
           //   value={selectedDate}
           onChange={(newDate) => {
+            // newDate.tz(selectedTimezone)
+            console.log("newDate", newDate)
             setDate(newDate)
             // setFormattedDate(newDate.format('DD/MM/YYYY'))
             // setMinTime(dayjs(newDate.toString()).tz(selectedTimezone))
@@ -230,12 +262,15 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
 
             // console.log("date:", newDate)
           }}
-          shouldDisableDate={shouldDisableDate}
+          // shouldDisableDate={shouldDisableDate}
+          timezone={selectedTimezone}
+          disablePast
         />
         <Grid size={12} container justifyContent={"space-between"}>
           <Button
             onClick={() => {
-              setDate(null)
+              setDate(dayjs().tz(selectedTimezone).startOf("day"))
+              setDisplayDate(null)
               setCanSelectTime(false)
               setOpenDateModal(false)
               setTime(null)
@@ -247,6 +282,7 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
           </Button>
           <Button
             onClick={() => {
+              setDisplayDate(date)
               setOpenDateModal(false)
             }}
             disabled={!date}
@@ -282,6 +318,8 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
             }}
             minTime={minTime}
             ampm={true}
+            // timezone={selectedTimezone}
+            timeStep={15}
           />
         </Grid>
         <Grid size={12} container justifyContent={"space-between"}>

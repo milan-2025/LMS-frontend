@@ -1,4 +1,5 @@
 import { QueryClient } from "@tanstack/react-query"
+import { chkAndReplaceFollowUpIds } from "./followups"
 
 const backendBaseUrl = "http://localhost:3000"
 
@@ -69,28 +70,57 @@ export const getLeads = async ({ queryKey }) => {
     throw error
   }
   const queryData = queryKey[1]
-  const response = await fetch(
-    backendBaseUrl + `/api/leads/get-leads?page=${queryData.page}&limit=5`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  )
+  let response = null
+  if (queryData.tabValue == "Follow Ups") {
+    response = await fetch(
+      backendBaseUrl + `/api/follow-up/get-follow-up?page=${queryData.page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+  } else {
+    response = await fetch(
+      backendBaseUrl + `/api/leads/get-leads?page=${queryData.page}&limit=5`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+  }
   if (!response.ok) {
     let error = new Error("Error while fetching leads.")
     error.code = response.status
     error.info = await response.json()
     throw error
   }
+  if (queryData.tabValue == "Follow Ups") {
+    let data = await response.json()
+    let leads = data.pendingFollowUps.map((item) => {
+      return {
+        ...item.lead,
+        timeZone: item.timeZone,
+        date: item.date,
+      }
+    })
+    delete data.pendingFollowUps
+    data.leads = leads
+    return data
+  }
   let data = await response.json()
+
   return data
 }
 
 export const addPhoneNumber = async (phoneNumberData) => {
   const { token } = JSON.parse(localStorage.getItem("token"))
-
-  const response = await fetch(backendBaseUrl + "/api/leads/add-phone-number", {
+  let url = ""
+  url = !phoneNumberData.isEmail
+    ? "/api/leads/add-phone-number"
+    : "/api/leads/add-email"
+  const response = await fetch(backendBaseUrl + url, {
     method: "POST",
     body: JSON.stringify(phoneNumberData),
     headers: {
@@ -104,21 +134,27 @@ export const addPhoneNumber = async (phoneNumberData) => {
     error.info = await response.json()
     throw error
   }
-  return { message: "Phone number added successfully." }
+  return {
+    message: !phoneNumberData.isEmail
+      ? "Phone number added successfully."
+      : "Email added successfully",
+  }
 }
 
 export const getPhoneNumbers = async ({ queryKey }) => {
   const { token } = JSON.parse(localStorage.getItem("token"))
 
-  const response = await fetch(
-    backendBaseUrl +
-      `/api/leads/get-phone-numbers?leadId=${queryKey[1].leadId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  )
+  let url = ""
+
+  url = !queryKey[1].isEmail
+    ? `/api/leads/get-phone-numbers?leadId=${queryKey[1].leadId}`
+    : `/api/leads/get-emails?leadId=${queryKey[1].leadId}`
+
+  const response = await fetch(backendBaseUrl + url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
   if (!response.ok) {
     let error = new Error("Error while getting phone numbers.")
     error.code = response.status
@@ -149,5 +185,70 @@ export const addFollowUp = async (followUpData) => {
     error.info = await response.json()
     throw error
   }
+  chkAndReplaceFollowUpIds(followUpData.leadId)
+
   return { message: "Follow up set successfully." }
+}
+
+export const getFollowUpIds = async () => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+
+  const response = await fetch(
+    backendBaseUrl + "/api/follow-up/get-follow-up-ids",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+  if (!response.ok) {
+    let error = new Error("Error during fetching follow up length")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  let data = await response.json()
+  let mappedData = data.ids.map((item) => {
+    return item.lead
+  })
+  return mappedData
+}
+
+export const addResponse = async (responseData) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+
+  const response = await fetch(backendBaseUrl + "/api/leads/add-response", {
+    method: "POST",
+    body: JSON.stringify(responseData),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    let error = new Error("Error whule adding the response.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  return { message: "response added successfully." }
+}
+
+export const addComment = async (commentData) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  const response = await fetch(backendBaseUrl + "/api/leads/add-comment", {
+    method: "POST",
+    body: JSON.stringify(commentData),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    let error = new Error("Error whule adding the comment.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  return { message: "Comment added successfully." }
 }

@@ -13,6 +13,7 @@ const CopyPhoneNumberModal = ({
   openModal,
   setOpenModal,
   leadId,
+  isEmail = false,
 }) => {
   const style = {
     position: "absolute",
@@ -42,7 +43,7 @@ const CopyPhoneNumberModal = ({
   }
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["phoneNumbers", { leadId: leadId }],
+    queryKey: ["phoneNumbers", { leadId: leadId, isEmail: isEmail }],
     queryFn: getPhoneNumbers,
     staleTime: Infinity,
   })
@@ -84,7 +85,7 @@ const CopyPhoneNumberModal = ({
       >
         <Grid container size={12}>
           <Typography flexGrow={1} variant="h6">
-            Phone Numbers
+            {!isEmail ? "Phone Numbers" : "Emails"}
           </Typography>
           <CloseIcon
             onClick={() => {
@@ -93,14 +94,23 @@ const CopyPhoneNumberModal = ({
           />
         </Grid>
         <Grid mt={"1rem"} size={12}>
-          <PhoneNumberDisplay phoneNumber={phoneNumber} comment={"Default"} />
+          {phoneNumber.length > 0 && (
+            <PhoneNumberDisplay
+              leadId={leadId}
+              phoneNumber={phoneNumber}
+              comment={"Default"}
+              isEmail={isEmail}
+            />
+          )}
           {data &&
             data.phoneNumbers.map((number) => {
               return (
                 <PhoneNumberDisplay
-                  phoneNumber={number.phoneNumber}
+                  phoneNumber={!isEmail ? number.phoneNumber : number.email}
                   comment={number.comment}
                   key={number._id}
+                  leadId={leadId}
+                  isEmail={isEmail}
                 />
               )
             })}

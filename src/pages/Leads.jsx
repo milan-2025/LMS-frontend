@@ -1,17 +1,4 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Pagination,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material"
+import { Button, Grid, Pagination, Tabs, Typography } from "@mui/material"
 import UploadIcon from "@mui/icons-material/Upload"
 import { useState } from "react"
 import { styled, useTheme } from "@mui/material/styles"
@@ -23,6 +10,14 @@ import { showAlert } from "../store/AlertSlice"
 import ActionRow from "../components/ActionRow"
 import CopyPhoneNumberModal from "../components/CopyPhoneNumberModal"
 import LeadsTable from "../components/LeadsTable"
+import * as React from "react"
+import Box from "@mui/material/Box"
+import Tab from "@mui/material/Tab"
+
+import { useNavigate } from "react-router-dom"
+import LeadTabs from "../components/LeadTabs"
+import Collapse from "@mui/material/Collapse"
+import LeadFilters from "../components/LeadFilters"
 
 const validateExcelFile = (file) => {
   // Check file extension
@@ -48,7 +43,7 @@ const validateExcelFile = (file) => {
 }
 
 const Leads = () => {
-  const [uploadedFileFile, setUploadedFile] = useState(null)
+  // const [uploadedFileFile, setUploadedFile] = useState(null)
   // const [fileName, setFileName] = useState("")
 
   const VisuallyHiddenInput = styled("input")({
@@ -111,81 +106,27 @@ const Leads = () => {
     )
   }
 
-  const [page, setPage] = useState(1)
-  const [count, setCount] = useState(null)
-  // const [limit, setLimit] = useState(10)
-  // const [fetchedLeads, setFetchedLeads] = useState(null)
-  const limit = 5
-  const {
-    data,
-    isLoading,
-    isError: isFetchLeadsError,
-    error: fetchLeadsError,
-  } = useQuery({
-    queryKey: [
-      "leads",
-      {
-        page: page,
-      },
-    ],
-    queryFn: getLeads,
-    staleTime: Infinity,
-  })
-  let content = <Typography variant="subtitle2">No Leads to show</Typography>
-  if (isLoading) {
-    dispatch(startLoader())
-  }
-  if (isFetchLeadsError) {
-    dispatch(stopLoader())
-    dispatch(
-      showAlert({
-        isVisile: true,
-        severity: "error",
-        message: fetchLeadsError.info?.error || "Error while getting leads.",
-      })
-    )
-    content = (
-      <Typography variant="subtitle2">
-        {fetchLeadsError.info?.error || "Error while getting leads."}
-      </Typography>
-    )
-  }
-  let actions = [
-    "Copy Phone Number",
-    "Change Status",
-    "Set Follow Up",
-    "Copy Email",
-    "Add Email",
-    "Add Phone Number",
-    "Add Response",
-    "Add Comment",
-    "View Details",
-  ]
-  let fetchedLeads = null
-  if (data) {
-    dispatch(stopLoader())
-    dispatch(
-      showAlert({
-        isVisile: true,
-        severity: "success",
-        message: "Leads fetched successfully.",
-      })
-    )
-    console.log("leads", data)
-    fetchedLeads = data.leads.map((lead) => {
-      return {
-        _id: lead._id,
-        company: lead.shipper,
-        state: lead.state,
-        timeZone: lead.timeZone,
-        status: lead.status,
-        actions: actions,
-      }
-    })
-    // console.log("fl", formatedLeads)
-    // setFetchedLeads(formatedLeads)
-  }
   const theme = useTheme()
+  const navigate = useNavigate()
+
+  const handleTabClicked = (tv) => {
+    switch (tv) {
+      case "New":
+        // navigate("/leads")
+        break
+      case "Connected":
+        // navigate("/leads/connected")
+        break
+      case "Not Connected":
+        // navigate("/leads/not-connected")
+        break
+      case "Follow Ups":
+        // navigate("/leads/follow-up")
+        break
+    }
+  }
+
+  const [tabValue, setTabValue] = useState("New")
 
   return (
     <>
@@ -212,24 +153,12 @@ const Leads = () => {
               />
             </Button>
           </Grid>
-          <Grid size={12}>
-            {fetchedLeads && (
-              <LeadsTable leads={data.leads} fetchedLeads={fetchedLeads} />
-            )}
-
-            {data && (
-              <Grid mb={"3rem"} justifyContent={"center"} container mt={"2rem"}>
-                <Pagination
-                  count={data.totalPages}
-                  page={page}
-                  onChange={(e, changedPage) => {
-                    console.log("cp", changedPage)
-                    setPage(changedPage)
-                  }}
-                  color="primary"
-                />
-              </Grid>
-            )}
+          <Grid>
+            <LeadTabs tabValue={tabValue} setTabValue={setTabValue} />
+            <LeadFilters />
+            <Grid size={12}>
+              <LeadsTable tabValue={tabValue} />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

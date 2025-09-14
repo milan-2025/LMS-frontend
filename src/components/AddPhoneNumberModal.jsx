@@ -14,12 +14,14 @@ import { addPhoneNumber, queryClient } from "../util/http"
 import { useDispatch } from "react-redux"
 import { startLoader, stopLoader } from "../store/loaderSlice"
 import { showAlert } from "../store/AlertSlice"
+import { addLeadAction } from "../store/leadActionSlice"
 
 const AddPhoneNumberModal = ({
   //   phoneNumber,
   openModal,
   setOpenModal,
   leadId,
+  isEmail = false,
 }) => {
   const style = {
     position: "absolute",
@@ -65,13 +67,19 @@ const AddPhoneNumberModal = ({
       dispatch(stopLoader())
       queryClient.invalidateQueries({
         queryKey: ["phoneNumbers", { leadId: leadId }],
-        exact: true,
       })
+      dispatch(
+        addLeadAction({
+          leadId: leadId,
+          name: !isEmail ? "Add Phone Number" : "Add Email",
+          isCompleted: true,
+        })
+      )
       dispatch(
         showAlert({
           isVisible: true,
           severity: "success",
-          message: "Phone number added successfully.",
+          message: data.message,
         })
       )
     },
@@ -102,6 +110,7 @@ const AddPhoneNumberModal = ({
         phoneNumber: phnNumber,
         comment: comment,
         leadId: leadId,
+        isEmail,
       })
       setPhnNumber("")
       setComment("")
@@ -134,7 +143,7 @@ const AddPhoneNumberModal = ({
       >
         <Grid container size={12}>
           <Typography flexGrow={1} variant="h6">
-            Add Phone Number
+            {!isEmail ? "Add Phone Number" : "Add Email"}
           </Typography>
           <CloseIcon
             onClick={() => {
@@ -150,7 +159,7 @@ const AddPhoneNumberModal = ({
               onChange={phnNumberChange}
               onBlur={phnNumberBlur}
               value={phnNumber}
-              label="Phone Number"
+              label={!isEmail ? "Phone Number" : "Email"}
               name="Phone Number"
               variant="outlined"
               error={phnNumberDidEdit && !phnNumberError.chk}
@@ -194,7 +203,7 @@ const AddPhoneNumberModal = ({
                 addNumber()
               }}
             >
-              Add Phone Number
+              {!isEmail ? "Add Phone Number" : "Add Email"}
             </Button>
           </Grid>
         </Grid>

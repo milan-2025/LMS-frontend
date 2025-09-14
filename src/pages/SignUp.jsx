@@ -171,177 +171,183 @@ const SignUp = () => {
   }, [emailError, fullNameError, passwordError, confirmPasswordError])
 
   return (
-    <Grid
-      container
-      //   height={"100vh"}
-      size={12}
-      //   alignItems={"center"}
-      justifyContent={"center"}
-    >
+    <>
       <Grid
         container
-        mt={"5rem"}
-        mb={"5rem"}
-        size={{
-          md: 4,
-          xs: 10,
-        }}
-        p={"2rem"}
-        // minHeight={400}
-        bgcolor={"secondary.light"}
-        // marginTop={"auto"}
-        // marginBottom={"auto"}
-        borderRadius={"1rem"}
-        boxShadow={7}
+        //   height={"100vh"}
+        size={12}
+        //   alignItems={"center"}
+        justifyContent={"center"}
       >
-        <Typography variant={"h5"}>Create Your Account</Typography>
-        {/* <Typography variant="caption" mt={"0.5rem"}>
+        <Grid
+          container
+          mt={"5rem"}
+          mb={"5rem"}
+          size={{
+            md: 4,
+            xs: 10,
+          }}
+          p={"2rem"}
+          // minHeight={400}
+          bgcolor={"secondary.light"}
+          // marginTop={"auto"}
+          // marginBottom={"auto"}
+          borderRadius={"1rem"}
+          boxShadow={7}
+        >
+          <Typography variant={"h5"}>Create Your Account</Typography>
+          {/* <Typography variant="caption" mt={"0.5rem"}>
           Enter your account details to access the app.
         </Typography> */}
-        <Grid size={12} mt={"1.8rem"}>
-          <TextField
-            id="fullName"
-            label="Full Name"
-            variant="outlined"
-            onChange={fullNameChange}
-            onBlur={fullNameBlur}
-            value={fullName}
-            error={fullNameEdit && !fullNameError.chk}
-            fullWidth
-          />
-          {fullNameEdit && !fullNameError.chk && (
-            <FormHelperText sx={{ color: "error.main" }}>
-              {fullNameError.message}
-            </FormHelperText>
-          )}
-        </Grid>
-        <Grid size={12} mt={"1.5rem"}>
-          <TextField
-            id="email"
-            onChange={emailChange}
-            onBlur={emailBlur}
-            value={email}
-            label="Email"
-            name="email"
-            variant="outlined"
-            error={didEmailEdit && !emailError.chk}
-            fullWidth
-          />
-          {didEmailEdit && !emailError.chk && (
-            <FormHelperText sx={{ color: "error.main" }}>
-              {emailError.message}
-            </FormHelperText>
-          )}
-        </Grid>
-        <Grid size={12} mt={"1.5rem"}>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel
-              error={didPasswordEdit && !passwordError.chk}
-              htmlFor="outlined-adornment-password"
-            >
-              Password
-            </InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-password"
-              type={showPassword ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label={
-                      showPassword
-                        ? "hide the password"
-                        : "display the password"
-                    }
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    onMouseUp={handleMouseUpPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
-              error={didPasswordEdit && !passwordError.chk}
-              value={password}
-              onChange={passwordChange}
-              onBlur={passwordBlur}
-              name="password"
+          <Grid size={12} mt={"1.8rem"}>
+            <TextField
+              id="fullName"
+              label="Full Name"
+              variant="outlined"
+              onChange={fullNameChange}
+              onBlur={fullNameBlur}
+              value={fullName}
+              error={fullNameEdit && !fullNameError.chk}
+              fullWidth
             />
-          </FormControl>
-          {didPasswordEdit && !passwordError.chk && (
-            <FormHelperText sx={{ color: "error.main" }}>
-              {passwordError.message}
-            </FormHelperText>
-          )}
+            {fullNameEdit && !fullNameError.chk && (
+              <FormHelperText sx={{ color: "error.main" }}>
+                {fullNameError.message}
+              </FormHelperText>
+            )}
+          </Grid>
+          <Grid size={12} mt={"1.5rem"}>
+            <TextField
+              id="email"
+              onChange={emailChange}
+              onBlur={emailBlur}
+              value={email}
+              label="Email"
+              name="email"
+              variant="outlined"
+              error={didEmailEdit && !emailError.chk}
+              fullWidth
+            />
+            {didEmailEdit && !emailError.chk && (
+              <FormHelperText sx={{ color: "error.main" }}>
+                {emailError.message}
+              </FormHelperText>
+            )}
+          </Grid>
           <Grid size={12} mt={"1.5rem"}>
             <FormControl fullWidth variant="outlined">
               <InputLabel
-                error={didconfirmPasswordEdit && !confirmPasswordError.chk}
-                htmlFor="outlined-adornment-Confirmpassword"
+                error={didPasswordEdit && !passwordError.chk}
+                htmlFor="outlined-adornment-password"
               >
-                Confirm Password
+                Password
               </InputLabel>
               <OutlinedInput
-                id="outlined-adornment-Confirmpassword"
-                type={showConfirmPassword ? "text" : "password"}
+                id="outlined-adornment-password"
+                type={showPassword ? "text" : "password"}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
                       aria-label={
-                        showConfirmPassword
-                          ? "hide the Confirmpassword"
-                          : "display the Confirmpassword"
+                        showPassword
+                          ? "hide the password"
+                          : "display the password"
                       }
-                      onClick={handleClickShowConfirmPassword}
-                      onMouseDown={handleMouseDownConfirmPassword}
-                      onMouseUp={handleMouseUpConfirmPassword}
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
                       edge="end"
                     >
-                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 }
-                label="Confirm Password"
-                error={didconfirmPasswordEdit && !confirmPasswordError.chk}
-                value={confirmPassword}
-                onChange={confirmPasswordChange}
-                onBlur={confirmPasswordBlur}
+                label="Password"
+                error={didPasswordEdit && !passwordError.chk}
+                value={password}
+                onChange={passwordChange}
+                onBlur={passwordBlur}
+                name="password"
               />
             </FormControl>
-            {didconfirmPasswordEdit && !confirmPasswordError.chk && (
+            {didPasswordEdit && !passwordError.chk && (
               <FormHelperText sx={{ color: "error.main" }}>
-                {confirmPasswordError.message}
+                {passwordError.message}
               </FormHelperText>
             )}
+            <Grid size={12} mt={"1.5rem"}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel
+                  error={didconfirmPasswordEdit && !confirmPasswordError.chk}
+                  htmlFor="outlined-adornment-Confirmpassword"
+                >
+                  Confirm Password
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-Confirmpassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label={
+                          showConfirmPassword
+                            ? "hide the Confirmpassword"
+                            : "display the Confirmpassword"
+                        }
+                        onClick={handleClickShowConfirmPassword}
+                        onMouseDown={handleMouseDownConfirmPassword}
+                        onMouseUp={handleMouseUpConfirmPassword}
+                        edge="end"
+                      >
+                        {showConfirmPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Confirm Password"
+                  error={didconfirmPasswordEdit && !confirmPasswordError.chk}
+                  value={confirmPassword}
+                  onChange={confirmPasswordChange}
+                  onBlur={confirmPasswordBlur}
+                />
+              </FormControl>
+              {didconfirmPasswordEdit && !confirmPasswordError.chk && (
+                <FormHelperText sx={{ color: "error.main" }}>
+                  {confirmPasswordError.message}
+                </FormHelperText>
+              )}
+            </Grid>
+            <Grid size={12} mt={"1.8rem"} mb={"0.7rem"}>
+              <Button
+                onClick={handleSignUpButton}
+                fullWidth
+                variant="contained"
+                color="primary"
+                disabled={!canSignUp}
+              >
+                Sign Up
+              </Button>
+            </Grid>
+            <Typography variant="caption">
+              Already have an account ?{" "}
+              <Link
+                style={{
+                  color: "#22C55E",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                }}
+                to={"/"}
+              >
+                Login
+              </Link>
+            </Typography>
           </Grid>
-          <Grid size={12} mt={"1.8rem"} mb={"0.7rem"}>
-            <Button
-              onClick={handleSignUpButton}
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={!canSignUp}
-            >
-              Sign Up
-            </Button>
-          </Grid>
-          <Typography variant="caption">
-            Already have an account ?{" "}
-            <Link
-              style={{
-                color: "#22C55E",
-                fontWeight: 500,
-                textDecoration: "none",
-              }}
-              to={"/"}
-            >
-              Login
-            </Link>
-          </Typography>
         </Grid>
       </Grid>
-    </Grid>
+    </>
   )
 }
 

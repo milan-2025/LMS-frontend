@@ -1,32 +1,28 @@
 import { Outlet } from "react-router-dom"
 import Navbar from "../components/Navbar"
-import { useDispatch, useSelector } from "react-redux"
-import { Alert, Backdrop, CircularProgress, Snackbar } from "@mui/material"
-import { hideAlert } from "../store/AlertSlice"
+
+import AlertDialog from "../components/AlertDialog"
+import Common from "../components/Common"
+// import { Token } from "@mui/icons-material"
 
 const RootLayout = () => {
-  const isLoading = useSelector((state) => state.loader.loading)
-  const alertData = useSelector((state) => state.alert)
-  const dispatch = useDispatch()
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return
-    }
-
-    dispatch(hideAlert())
+  const handleClickOpen = () => {
+    setOpen(true)
   }
+
   return (
     <>
       <Navbar />
-      <Backdrop
+      {/* <Backdrop
         sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
         open={isLoading}
         // onClick={handleClose}
       >
         <CircularProgress color="primary" />
-      </Backdrop>
-      <Snackbar
+      </Backdrop> */}
+      <AlertDialog />
+      <Common />
+      {/* <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         open={alertData.isVisible}
         autoHideDuration={6000}
@@ -41,7 +37,7 @@ const RootLayout = () => {
         >
           {alertData.message}
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
       <Outlet />
     </>
   )

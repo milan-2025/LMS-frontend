@@ -23,6 +23,12 @@ import { queryClient } from "./util/http"
 import Leads from "./pages/Leads"
 import { LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import LeadsTable from "./components/LeadsTable"
+import { setLeadActions } from "./store/leadActionSlice"
+import {
+  getLADurationLeft,
+  setLeadActionsExpirationTime,
+} from "./util/leadExpirationTime"
 
 const router = createBrowserRouter([
   {
@@ -88,6 +94,7 @@ function App() {
   )
   const dispatch = useDispatch()
   const token = useSelector((state) => state.user.token)
+  const leadActions = useSelector((state) => state.leadAction)
 
   React.useEffect(() => {
     // if user is logged in but redux state is not updated (like refresh site)
@@ -103,6 +110,14 @@ function App() {
           expirationTime: et,
         })
       )
+      if (getLADurationLeft() > 0) {
+        dispatch(
+          setLeadActions({
+            leadActions: JSON.parse(localStorage.getItem("leadActions"))
+              .leadActions,
+          })
+        )
+      }
     }
   }, [])
   // const navigate = useNavigate()
@@ -126,6 +141,33 @@ function App() {
 
     return () => clearTimeout(timer)
   }, [token])
+
+  React.useEffect(() => {
+    if (leadActions.length == 0) {
+      return
+    }
+    if (leadActions.length == 1) {
+      setLeadActionsExpirationTime()
+    }
+    if (getLADurationLeft() < 0) {
+      localStorage.removeItem("leadActions")
+      dispatch(
+        setLeadActions({
+          leadActions: [],
+        })
+      )
+    }
+    const lADuration = getLADurationLeft()
+    let lATimer = setTimeout(() => {
+      localStorage.removeItem("leadActions")
+      dispatch(
+        setLeadActions({
+          leadActions: [],
+        })
+      )
+    }, lADuration)
+    return () => clearTimeout(lATimer)
+  }, [leadActions])
 
   return (
     <QueryClientProvider client={queryClient}>

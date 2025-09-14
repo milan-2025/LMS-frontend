@@ -10,6 +10,8 @@ import { useTheme } from "@mui/material/styles"
 import { useDispatch, useSelector } from "react-redux"
 import { handleLogout } from "../store/userSlice"
 import { useEffect, useRef, useState } from "react"
+import { Grid } from "@mui/material"
+import TimeZonesCurrentTime from "./TimeZonesCurrentTime"
 // import IconButton from '@mui/material/IconButton';
 // import MenuIcon from '@mui/icons-material/Menu';
 
@@ -22,6 +24,11 @@ export default function Navbar() {
     dispatch(handleLogout())
     navigate("/")
   }
+  useEffect(() => {
+    if (!token) {
+      navigate("/")
+    }
+  }, [token])
   let content
   if (!token) {
     content = (
@@ -98,12 +105,12 @@ export default function Navbar() {
           ref={appBarRef}
         >
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" component="div">
               Univasion CRM
             </Typography>
 
             {/* <NavLink> */}
-
+            <TimeZonesCurrentTime />
             {/* </NavLink> */}
             {content}
             {/* <IconButton
