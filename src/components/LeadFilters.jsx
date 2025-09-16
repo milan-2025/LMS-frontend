@@ -1,10 +1,32 @@
-import { Button, Collapse, Grid, Typography, useTheme } from "@mui/material"
+import {
+  Autocomplete,
+  Box,
+  Button,
+  CircularProgress,
+  Collapse,
+  Grid,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material"
 import { useState } from "react"
 import FilterListIcon from "@mui/icons-material/FilterList"
+import { useFormValues } from "../hooks/useFormValues"
+import { useQuery } from "@tanstack/react-query"
+import { getFilteredOptions } from "../util/http"
+import { isNotEmpty } from "../util/validation"
+import FilterInputComponent from "./FilterInputComponent"
 
 const LeadFilters = () => {
   const [showFilters, setShowFilters] = useState(false)
+
+  const [currentField, setCurrentField] = useState(null)
+
   const theme = useTheme()
+  const [state, setState] = useState("")
+  const [timeZone, setTimeZone] = useState("")
+  const [commodity, setCommodity] = useState("")
+  const [status, setStatus] = useState("")
 
   return (
     <Grid my={"1.3rem"} size={12}>
@@ -49,7 +71,32 @@ const LeadFilters = () => {
           }}
           p={"1rem"}
         >
-          <Grid container></Grid>
+          <Grid container spacing={2}>
+            <FilterInputComponent
+              value={state}
+              setValue={setState}
+              field={"state"}
+              label={"Search State..."}
+            />
+            <FilterInputComponent
+              value={timeZone}
+              setValue={setTimeZone}
+              field={"timeZone"}
+              label={"Search Time Zone..."}
+            />
+            <FilterInputComponent
+              value={commodity}
+              setValue={setCommodity}
+              field={"commodity"}
+              label={"Search Commodity..."}
+            />
+            <FilterInputComponent
+              value={status}
+              setValue={setStatus}
+              field={"status"}
+              label={"Search Status..."}
+            />
+          </Grid>
         </Grid>
       </Collapse>
     </Grid>

@@ -252,3 +252,30 @@ export const addComment = async (commentData) => {
   }
   return { message: "Comment added successfully." }
 }
+
+export const getFilteredOptions = async ({ queryKey }) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  let url = `${backendBaseUrl}/api/leads/filtered-options?field=${queryKey[1].field}&value=${queryKey[1].value}`
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    let error = new Error("Error whule getting filtered options.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+
+  let data = await response.json()
+  console.log("data", data)
+  let mappedOptions = data.options.map((item) => {
+    let field = queryKey[1].field
+    return {
+      name: item[field],
+      id: item._id,
+    }
+  })
+  return mappedOptions
+}
