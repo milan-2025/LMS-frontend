@@ -14,8 +14,9 @@ const alertSlice = createSlice({
       state.message = action.payload.message
     },
     hideAlert: (state) => {
-      state.isVisible = false
-      ;(state.severity = ""), (state.message = "")
+      state.isVisible = true
+      state.severity = ""
+      state.message = ""
     },
   },
 })
