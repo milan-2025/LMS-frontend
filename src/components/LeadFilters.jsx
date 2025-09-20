@@ -14,7 +14,7 @@ import FilterListIcon from "@mui/icons-material/FilterList"
 
 import FilterInputComponent from "./FilterInputComponent"
 import { useDispatch, useSelector } from "react-redux"
-import { showAlert } from "../store/AlertSlice"
+import { showAlert } from "../store/alertSlice"
 import { useMutation } from "@tanstack/react-query"
 import { getFilteredLeads, queryClient } from "../util/http"
 import {

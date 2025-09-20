@@ -24,7 +24,7 @@ import { useMutation } from "@tanstack/react-query"
 import { signupUser } from "../util/http"
 import { useDispatch } from "react-redux"
 import { startLoader, stopLoader } from "../store/loaderSlice"
-import { showAlert } from "../store/AlertSlice"
+import { showAlert } from "../store/alertSlice"
 import { handleLogin } from "../store/userSlice"
 
 const SignUp = () => {

@@ -13,7 +13,7 @@ import { useMutation } from "@tanstack/react-query"
 import { addPhoneNumber, queryClient } from "../util/http"
 import { useDispatch } from "react-redux"
 import { startLoader, stopLoader } from "../store/loaderSlice"
-import { showAlert } from "../store/AlertSlice"
+import { showAlert } from "../store/alertSlice"
 import { addLeadAction } from "../store/leadActionSlice"
 
 const AddPhoneNumberModal = ({

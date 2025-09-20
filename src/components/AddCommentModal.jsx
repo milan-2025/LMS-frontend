@@ -13,7 +13,7 @@ import { useFormValues } from "../hooks/useFormValues"
 import { isNotEmpty } from "../util/validation"
 import { useDispatch } from "react-redux"
 import { startLoader, stopLoader } from "../store/loaderSlice"
-import { showAlert } from "../store/AlertSlice"
+import { showAlert } from "../store/alertSlice"
 import { addLeadAction } from "../store/leadActionSlice"
 
 const AddCommentModal = ({ leadId, openCommentModal, setOpenCommentModal }) => {
