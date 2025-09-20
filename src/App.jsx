@@ -30,44 +30,49 @@ import {
   setLeadActionsExpirationTime,
 } from "./util/leadExpirationTime"
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <RootLayout />,
+      children: [
+        {
+          index: true,
+          element: <Login />,
+          loader: () => {
+            if (isLoggedIn()) {
+              return redirect("/leads")
+            }
+            return null
+          },
+        },
+        {
+          path: "/sign-up",
+          element: <SignUp />,
+          loader: () => {
+            if (isLoggedIn()) {
+              return redirect("/leads")
+            }
+            return null
+          },
+        },
+        {
+          path: "/leads",
+          element: <Leads />,
+          loader: () => {
+            if (!isLoggedIn()) {
+              return redirect("/")
+            }
+            return null
+          },
+        },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <RootLayout />,
-    children: [
-      {
-        index: true,
-        element: <Login />,
-        loader: () => {
-          if (isLoggedIn()) {
-            return redirect("/leads")
-          }
-          return null
-        },
-      },
-      {
-        path: "/sign-up",
-        element: <SignUp />,
-        loader: () => {
-          if (isLoggedIn()) {
-            return redirect("/leads")
-          }
-          return null
-        },
-      },
-      {
-        path: "/leads",
-        element: <Leads />,
-        loader: () => {
-          if (!isLoggedIn()) {
-            return redirect("/")
-          }
-          return null
-        },
-      },
-    ],
-  },
-])
+    basename: "/",
+  }
+)
 
 function App() {
   const mode = "dark"
