@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material"
 import { useDispatch } from "react-redux"
-import { showAlert } from "../store/AlertSlice"
+import { showAlert } from "../store/alertSlice"
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"
 import leadActionSlice, { addLeadAction } from "../store/leadActionSlice"
 

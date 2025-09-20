@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Alert, Backdrop, CircularProgress, Snackbar } from "@mui/material"
-import { hideAlert } from "../store/AlertSlice"
+import { hideAlert } from "../store/alertSlice"
 import { useQuery } from "@tanstack/react-query"
 import { getFollowUpIds } from "../util/http"
 import { getStoredFollowUpIds, setTopFollowUPIds } from "../util/followups"

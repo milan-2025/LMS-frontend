@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getPhoneNumbers } from "../util/http"
 import { useDispatch } from "react-redux"
 import { startLoader, stopLoader } from "../store/loaderSlice"
-import { showAlert } from "../store/AlertSlice"
+import { showAlert } from "../store/alertSlice"
 
 const CopyPhoneNumberModal = ({
   phoneNumber,
