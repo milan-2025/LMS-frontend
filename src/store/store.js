@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit"
 import userSlice from "./userSlice"
 import loaderSlice from "./loaderSlice"
-import alertSlice from "./alertSlice"
+import alertSlice from "./AlertSlice"
 import leadActionSlice from "./leadActionSlice"
 import leadDataSlice from "./leadData"
 
