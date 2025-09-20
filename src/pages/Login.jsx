@@ -102,7 +102,7 @@ const Login = () => {
       // console.log("data", data)
       dispatch(stopLoader())
       const token = data.token
-      const expirationTime = Date.now() + 1 * 60 * 60 * 1000
+      const expirationTime = Date.now() + 9 * 60 * 60 * 1000
       dispatch(
         handleLogin({
           token: token,

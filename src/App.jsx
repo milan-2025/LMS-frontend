@@ -73,47 +73,51 @@ function App() {
   const mode = "dark"
 
   // Memoize the theme object
-  const theme = () =>
-    createTheme({
-      palette: {
-        mode,
-        primary: {
-          main: "#22C55E",
-        },
-        secondary: {
-          main: "#1C2620",
-          light: "#161D1A",
-        },
-        text: {
-          main: "#D3D3D3",
-        },
-      },
-      components: {
-        MuiAutocomplete: {
-          styleOverrides: {
-            listbox: {
-              // General scrollbar styling for Firefox
-              scrollbarWidth: "thin",
-              scrollbarColor: "#22C55E", // gray-400 and gray-200
-
-              // Webkit-specific scrollbar styling (Chrome, Safari, Edge)
-              "&::-webkit-scrollbar": {
-                width: "4px",
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: "#22C55E", // gray-200
-                borderRadius: "4px",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#22C55E", // gray-400
-                borderRadius: "4px",
-                // border: "2px solid #e5e7eb",
-              },
-            },
+  const theme = React.useMemo(() =>
+    createTheme(
+      {
+        palette: {
+          mode,
+          primary: {
+            main: "#22C55E",
+          },
+          secondary: {
+            main: "#1C2620",
+            light: "#161D1A",
+          },
+          text: {
+            main: "#D3D3D3",
           },
         },
+        // components: {
+        //   MuiAutocomplete: {
+        //     styleOverrides: {
+        //       listbox: {
+        //         // General scrollbar styling for Firefox
+        //         scrollbarWidth: "thin",
+        //         scrollbarColor: "#22C55E", // gray-400 and gray-200
+
+        //         // Webkit-specific scrollbar styling (Chrome, Safari, Edge)
+        //         "&::-webkit-scrollbar": {
+        //           width: "4px",
+        //         },
+        //         "&::-webkit-scrollbar-track": {
+        //           backgroundColor: "#22C55E", // gray-200
+        //           borderRadius: "4px",
+        //         },
+        //         "&::-webkit-scrollbar-thumb": {
+        //           backgroundColor: "#22C55E", // gray-400
+        //           borderRadius: "4px",
+        //           // border: "2px solid #e5e7eb",
+        //         },
+        //       },
+        //     },
+        //   },
+        // },
       },
-    })
+      []
+    )
+  )
   // "&::-webkit-scrollbar": {
   //     width: "4px",
   //     //   marginLeft: "2rem",

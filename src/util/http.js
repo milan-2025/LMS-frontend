@@ -255,7 +255,7 @@ export const addComment = async (commentData) => {
 
 export const getFilteredOptions = async ({ queryKey }) => {
   const { token } = JSON.parse(localStorage.getItem("token"))
-  let url = `${backendBaseUrl}/api/leads/filtered-options?field=${queryKey[1].field}&value=${queryKey[1].value}`
+  let url = `${backendBaseUrl}/api/leads/filtered-options?field=${queryKey[1].field}&value=${queryKey[1].value}&tbValue=${queryKey[1].tabValue}`
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -270,6 +270,16 @@ export const getFilteredOptions = async ({ queryKey }) => {
 
   let data = await response.json()
   console.log("data", data)
+  if (queryKey[1].tabValue == "Follow Ups") {
+    let mappedOptions = data.options.map((item) => {
+      let field = queryKey[1].field
+      return {
+        name: item.lead[field],
+        id: item._id,
+      }
+    })
+    return mappedOptions
+  }
   let mappedOptions = data.options.map((item) => {
     let field = queryKey[1].field
     return {
@@ -278,4 +288,46 @@ export const getFilteredOptions = async ({ queryKey }) => {
     }
   })
   return mappedOptions
+}
+
+export const getFilteredLeads = async (filterData) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+
+  let url = "/api/leads/get-filtered-leads"
+
+  if (filterData.tabValue == "Follow Ups") {
+    url = url + "/follow-up"
+  }
+
+  const response = await fetch(backendBaseUrl + url, {
+    method: "POST",
+    body: JSON.stringify(filterData),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    let error = new Error("Error whule getting filtered data.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  if (filterData.tabValue == "Follow Ups") {
+    let data = await response.json()
+    console.log("fl-http", data)
+    let leads = data.filteredFollowUps.map((item) => {
+      return {
+        ...item.lead,
+        timeZone: item.timeZone,
+        date: item.date,
+      }
+    })
+    delete data.filteredFollowUps
+    data.filteredLeads = leads
+    return data
+  }
+  let data = await response.json()
+
+  return data
 }

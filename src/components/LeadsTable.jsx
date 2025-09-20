@@ -10,17 +10,18 @@ import {
   Typography,
   useTheme,
 } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CopyPhoneNumberModal from "./CopyPhoneNumberModal"
 import ActionRow from "./ActionRow"
 import { useQuery } from "@tanstack/react-query"
 import { getLeads } from "../util/http"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { startLoader, stopLoader } from "../store/loaderSlice"
 import { showAlert } from "../store/AlertSlice"
 import dayjs, { tz } from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import { setPage } from "../store/leadData"
 
 const LeadsTable = ({ tabValue }) => {
   const theme = useTheme()
@@ -28,12 +29,16 @@ const LeadsTable = ({ tabValue }) => {
   dayjs.extend(utc)
   dayjs.extend(timezone)
 
-  const [page, setPage] = useState(1)
-  const [count, setCount] = useState(null)
+  const leadsData = useSelector((state) => state.leads)
+
+  // const [page, setPage] = useState(1)
+  // const [count, setCount] = useState(null)
   // const [limit, setLimit] = useState(10)
   // const [fetchedLeads, setFetchedLeads] = useState(null)
+
+  console.log("dispatch page", leadsData.page)
   const limit = 5
-  const {
+  let {
     data,
     isLoading,
     isError: isFetchLeadsError,
@@ -42,16 +47,18 @@ const LeadsTable = ({ tabValue }) => {
     queryKey: [
       "leads",
       {
-        page: page,
+        page: leadsData.page,
         tabValue: tabValue,
       },
     ],
     queryFn: getLeads,
     staleTime: 0,
+    // enabled: !leadsData.filtersApplied,
   })
   let content = <Typography variant="subtitle2">No Leads to show</Typography>
   if (isLoading) {
     dispatch(startLoader())
+    console.log("i am here")
   }
   if (isFetchLeadsError) {
     dispatch(stopLoader())
@@ -98,51 +105,11 @@ const LeadsTable = ({ tabValue }) => {
       { name: "CST", id: "America/Chicago" },
       { name: "EST", id: "America/New_York" },
     ]
-    const timeFormatter = (date, tZone) => {
-      // console.log("date", date)
-      // const convDate = new Date(date).toLocaleString("en-US", {
-      //   timeZone: tZone,
-      // })
-      console.log("d", date)
-      console.log("t", tZone)
 
-      let str = dayjs(date)
-      let convertedStr = str.tz(tZone)
-      return convertedStr.format("DD-MM-YYYY hh:mm A")
-      // return convDate
-    }
-
-    function checkDSTAndFormat(utcDayjs, timeZone) {
-      // Map of time zones and their standard offsets in minutes
-      const timeZoneMap = {
-        "America/New_York": { offset: -300 }, // EST is UTC-5
-        "America/Chicago": { offset: -360 }, // CST is UTC-6
-        "America/Denver": { offset: -420 }, // MST is UTC-7
-        "America/Los_Angeles": { offset: -480 }, // PST is UTC-8
-      }
-
-      // Get the dayjs instance for the specified time zone
-      const dayjsInstance = utcDayjs.tz(timeZone)
-
-      // Get the standard offset for this time zone
-      const standardOffset = timeZoneMap[timeZone].offset
-
-      // Get the current offset, which might be a DST offset
-      const currentOffset = dayjsInstance.utcOffset()
-
-      // console.log(`timeZone:- ${timeZone}`)
-
-      // Check if the current offset is different from the standard offset.
-      // If so, it means DST is applied.
-      if (currentOffset !== standardOffset) {
-        // Manually adjust the time back to the standard offset to remove DST
-        return dayjsInstance
-          .utcOffset(standardOffset)
-          .format("DD-MM-YYYY hh:mm A")
-      } else {
-        // If DST is not applied, just return the formatted time
-        return dayjsInstance.format("DD-MM-YYYY hh:mm A")
-      }
+    console.log("FA2", leadsData.filtersApplied)
+    if (leadsData.filtersApplied) {
+      data = leadsData
+      console.log("dd", data)
     }
 
     fetchedLeads = data.leads.map((lead) => {
@@ -288,10 +255,14 @@ const LeadsTable = ({ tabValue }) => {
         <Grid mb={"3rem"} justifyContent={"center"} container mt={"2rem"}>
           <Pagination
             count={data.totalPages}
-            page={page}
+            page={leadsData.page}
             onChange={(e, changedPage) => {
               console.log("cp", changedPage)
-              setPage(changedPage)
+              dispatch(
+                setPage({
+                  page: changedPage,
+                })
+              )
             }}
             color="primary"
           />

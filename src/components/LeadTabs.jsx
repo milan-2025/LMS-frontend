@@ -1,9 +1,11 @@
 import { Box, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
+import { useDispatch } from "react-redux"
 import { useNavigate, useSearchParams } from "react-router-dom"
+import { resetFilters, setFiltersApplied, setPage } from "../store/leadData"
 
 const LeadTabs = ({ tabValue, setTabValue }) => {
-  const tabValues = ["New", "Connected", "Not Connected", "Follow Ups"]
+  const tabValues = ["New", "Follow Ups"]
   const [searchParams, setSearchParams] = useSearchParams()
   if (searchParams.has("followUp")) {
     const followup = searchParams.get("followUp")
@@ -12,8 +14,20 @@ const LeadTabs = ({ tabValue, setTabValue }) => {
       setSearchParams({ followup: "false" })
     }
   }
+  const dispatch = useDispatch()
   const handleChange = (event, newValue) => {
     setTabValue(newValue)
+    dispatch(
+      setPage({
+        page: 1,
+      })
+    )
+    dispatch(
+      setFiltersApplied({
+        filtersApplied: false,
+      })
+    )
+    dispatch(resetFilters())
   }
   return (
     <>

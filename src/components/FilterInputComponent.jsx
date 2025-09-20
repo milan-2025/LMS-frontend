@@ -7,13 +7,22 @@ import {
   Typography,
 } from "@mui/material"
 import { useQuery } from "@tanstack/react-query"
-import { useState } from "react"
+import { forwardRef, useImperativeHandle, useState } from "react"
 import { getFilteredOptions } from "../util/http"
 
-const FilterInputComponent = ({ value, field, setValue, label }) => {
+const FilterInputComponent = ({ value, field, setValue, label, tabValue }) => {
   const [open, setOpen] = useState(false)
+  // const [resetclicked, setResetClicked] = useState(false)
 
-  const {
+  let queryEnabled = true
+
+  if (value && value.trim().length > 0) {
+    queryEnabled = true
+  } else {
+    queryEnabled = false
+  }
+
+  let {
     data: options,
     isLoading,
     isError,
@@ -24,9 +33,11 @@ const FilterInputComponent = ({ value, field, setValue, label }) => {
       {
         field: field,
         value: value,
+        tabValue: tabValue,
       },
     ],
     queryFn: getFilteredOptions,
+    enabled: queryEnabled,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })
@@ -37,6 +48,7 @@ const FilterInputComponent = ({ value, field, setValue, label }) => {
   return (
     <Grid size={3}>
       <Autocomplete
+        // ref={ref}
         id="user-search-autocomplete"
         sx={{
           width: "100%",
@@ -50,16 +62,25 @@ const FilterInputComponent = ({ value, field, setValue, label }) => {
         }}
         isOptionEqualToValue={(option, value) => option.name === value.name}
         getOptionLabel={(option) => option.name}
+        // value={value}
+        // inputValue={value}
         options={options || []}
         loading={isLoading}
+        // onChange={(event, newValue) => {
+        //   if (newValue) {
+        //     setValue(newValue.name)
+        //   }
+        // }}
         onInputChange={(event, newInputValue) => {
           // setCurrentField("state")
+
           setValue(newInputValue)
         }}
         renderInput={(params) => (
           <TextField
             {...params}
             variant="outlined"
+            // value={value}
             label={label}
             slotProps={{
               input: {
@@ -79,6 +100,7 @@ const FilterInputComponent = ({ value, field, setValue, label }) => {
         renderOption={(props, option) => (
           <Box
             component="li"
+            {...props}
             key={option.id}
             sx={{
               p: 2,

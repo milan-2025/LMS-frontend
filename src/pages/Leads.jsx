@@ -107,26 +107,10 @@ const Leads = () => {
   }
 
   const theme = useTheme()
-  const navigate = useNavigate()
-
-  const handleTabClicked = (tv) => {
-    switch (tv) {
-      case "New":
-        // navigate("/leads")
-        break
-      case "Connected":
-        // navigate("/leads/connected")
-        break
-      case "Not Connected":
-        // navigate("/leads/not-connected")
-        break
-      case "Follow Ups":
-        // navigate("/leads/follow-up")
-        break
-    }
-  }
 
   const [tabValue, setTabValue] = useState("New")
+
+  // const [filtersApplied, setFiltersApplied] = useState(false)
 
   return (
     <>
@@ -155,7 +139,7 @@ const Leads = () => {
           </Grid>
           <Grid>
             <LeadTabs tabValue={tabValue} setTabValue={setTabValue} />
-            <LeadFilters />
+            <LeadFilters tabValue={tabValue} />
             <Grid size={12}>
               <LeadsTable tabValue={tabValue} />
             </Grid>
