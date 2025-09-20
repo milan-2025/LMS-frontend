@@ -23,7 +23,7 @@ import { loginUser } from "../util/http"
 import { useDispatch } from "react-redux"
 import { handleLogin } from "../store/userSlice"
 import { startLoader, stopLoader } from "../store/loaderSlice"
-import { showAlert } from "../store/AlertSlice"
+import { showAlert } from "../store/alertSlice"
 // import { Email, Password } from "@mui/icons-material"
 
 const Login = () => {
