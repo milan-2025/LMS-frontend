@@ -4,7 +4,7 @@ import { useState } from "react"
 import { styled, useTheme } from "@mui/material/styles"
 import { useDispatch } from "react-redux"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { getLeads, uploadLeads } from "../util/http"
+import { getLeads, queryClient, uploadLeads } from "../util/http"
 import { startLoader, stopLoader } from "../store/loaderSlice"
 import { showAlert } from "../store/alertSlice"
 import ActionRow from "../components/ActionRow"
@@ -63,14 +63,20 @@ const Leads = () => {
     mutationFn: uploadLeads,
     retry: 0,
     onSuccess: (data) => {
-      dispatch(stopLoader())
-      dispatch(
-        showAlert({
-          isVisile: true,
-          severity: "success",
-          message: "Leads uploadded successfully.",
+      queryClient
+        .invalidateQueries({
+          queryKey: ["leads"],
         })
-      )
+        .then(() => {
+          dispatch(stopLoader())
+          dispatch(
+            showAlert({
+              isVisile: true,
+              severity: "success",
+              message: "Leads uploadded successfully.",
+            })
+          )
+        })
     },
   })
 
