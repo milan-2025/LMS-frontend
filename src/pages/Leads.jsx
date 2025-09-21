@@ -69,7 +69,7 @@ const Leads = () => {
           queryKey: ["leads"],
         })
         .then(() => {
-          dispatch(stopLoader())
+          // dispatch(stopLoader())
           dispatch(
             showAlert({
               isVisile: true,
@@ -95,6 +95,7 @@ const Leads = () => {
       // setFileName(file.name);
       const formData = new FormData()
       formData.append("file", file)
+      dispatch(startLoader())
       mutate(formData)
       // files = null
     }
