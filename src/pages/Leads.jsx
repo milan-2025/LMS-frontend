@@ -104,7 +104,7 @@ const Leads = () => {
     dispatch(startLoader())
   }
   if (isError) {
-    dispatch(stopLoader())
+    // dispatch(stopLoader())
     dispatch(
       showAlert({
         isVisile: true,
