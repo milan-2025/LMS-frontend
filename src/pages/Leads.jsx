@@ -43,7 +43,7 @@ const validateExcelFile = (file) => {
 }
 
 const Leads = () => {
-  // const [uploadedFileFile, setUploadedFile] = useState(null)
+  const [uploading, setUploading] = useState(false)
   // const [fileName, setFileName] = useState("")
 
   const VisuallyHiddenInput = styled("input")({
@@ -59,16 +59,19 @@ const Leads = () => {
   })
   const dispatch = useDispatch()
 
-  const { mutate, isPending, isError, error } = useMutation({
+  const { mutate, isIdle, isPaused, isPending, isError, error } = useMutation({
     mutationFn: uploadLeads,
     retry: 0,
     onSuccess: (data) => {
       console.log("success")
+      dispatch(startLoader())
+
       queryClient
         .invalidateQueries({
           queryKey: ["leads"],
         })
         .then(() => {
+          setUploading(false)
           // dispatch(stopLoader())
           dispatch(
             showAlert({
@@ -80,6 +83,18 @@ const Leads = () => {
         })
     },
   })
+  if (isIdle) {
+    dispatch(startLoader())
+  }
+  if (isPaused) {
+    dispatch(startLoader())
+  }
+
+  if (uploading) {
+    dispatch(startLoader())
+  } else {
+    dispatch(stopLoader())
+  }
 
   const handleFileChange = (files) => {
     const file = files[0]
@@ -96,7 +111,10 @@ const Leads = () => {
       const formData = new FormData()
       formData.append("file", file)
       dispatch(startLoader())
+      setUploading(true)
       mutate(formData)
+      dispatch(startLoader())
+
       // files = null
     }
   }
@@ -105,6 +123,7 @@ const Leads = () => {
   }
   if (isError) {
     // dispatch(stopLoader())
+    dispatch(startLoader())
     dispatch(
       showAlert({
         isVisile: true,
@@ -137,8 +156,9 @@ const Leads = () => {
               startIcon={<UploadIcon />}
               variant="contained"
               component="label"
+              disabled={uploading}
             >
-              Upload
+              {!uploading ? "Upload" : "Uploading"}
               <VisuallyHiddenInput
                 type="file"
                 onChange={(event) => handleFileChange(event.target.files)}
@@ -146,11 +166,16 @@ const Leads = () => {
             </Button>
           </Grid>
           <Grid>
-            <LeadTabs tabValue={tabValue} setTabValue={setTabValue} />
-            <LeadFilters tabValue={tabValue} />
-            <Grid size={12}>
-              <LeadsTable tabValue={tabValue} />
-            </Grid>
+            {uploading && <Typography>Loading....</Typography>}
+            {!uploading && (
+              <>
+                <LeadTabs tabValue={tabValue} setTabValue={setTabValue} />
+                <LeadFilters tabValue={tabValue} />
+                <Grid size={12}>
+                  <LeadsTable tabValue={tabValue} />
+                </Grid>
+              </>
+            )}
           </Grid>
         </Grid>
       </Grid>
