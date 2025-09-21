@@ -63,6 +63,7 @@ const Leads = () => {
     mutationFn: uploadLeads,
     retry: 0,
     onSuccess: (data) => {
+      console.log("success")
       queryClient
         .invalidateQueries({
           queryKey: ["leads"],
