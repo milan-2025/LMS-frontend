@@ -29,52 +29,64 @@ import {
   getLADurationLeft,
   setLeadActionsExpirationTime,
 } from "./util/leadExpirationTime"
-
-const router = createBrowserRouter(
-  [
-    {
-      path: "/",
-      element: <RootLayout />,
-      children: [
-        {
-          index: true,
-          element: <Login />,
-          loader: () => {
-            if (isLoggedIn()) {
-              return redirect("/leads")
-            }
-            return null
-          },
-        },
-        {
-          path: "/sign-up",
-          element: <SignUp />,
-          loader: () => {
-            if (isLoggedIn()) {
-              return redirect("/leads")
-            }
-            return null
-          },
-        },
-        {
-          path: "/leads",
-          element: <Leads />,
-          loader: () => {
-            if (!isLoggedIn()) {
-              return redirect("/")
-            }
-            return null
-          },
-        },
-      ],
-    },
-  ],
-  {
-    basename: "/",
-  }
-)
+import { startLoader, stopLoader } from "./store/loaderSlice"
 
 function App() {
+  // const dispatch = useDispatch();
+  const dispatch = useDispatch()
+
+  const router = createBrowserRouter(
+    [
+      {
+        path: "/",
+        element: <RootLayout />,
+        children: [
+          {
+            index: true,
+            element: <Login />,
+            loader: async () => {
+              dispatch(startLoader())
+              let chk = await isLoggedIn()
+              dispatch(stopLoader())
+              if (chk) {
+                return redirect("/leads")
+              }
+              return null
+            },
+          },
+          {
+            path: "/sign-up",
+            element: <SignUp />,
+            loader: async () => {
+              dispatch(startLoader())
+              let chk = await isLoggedIn()
+              dispatch(stopLoader())
+              if (chk) {
+                return redirect("/leads")
+              }
+              return null
+            },
+          },
+          {
+            path: "/leads",
+            element: <Leads />,
+            loader: async () => {
+              dispatch(startLoader())
+              let chk = await isLoggedIn()
+              dispatch(stopLoader())
+              if (!chk) {
+                return redirect("/")
+              }
+              return null
+            },
+          },
+        ],
+      },
+    ],
+    {
+      basename: "/",
+    }
+  )
   const mode = "dark"
 
   // Memoize the theme object
@@ -136,7 +148,6 @@ function App() {
   //     backgroundColor: (theme) => theme.palette.primary.main,
   //     borderRadius: "4px",
   //   },
-  const dispatch = useDispatch()
   const token = useSelector((state) => state.user.token)
   const leadActions = useSelector((state) => state.leadAction)
 
