@@ -15,6 +15,7 @@ import { useSelector } from "react-redux"
 import MyDialog from "./MyDialog"
 import ResponseDisplay from "./Responsedisplay"
 import AddCommentModal from "./AddCommentModal"
+import { useNavigate } from "react-router-dom"
 const ActionRow = ({ lead, actions }) => {
   const [openPhoneNumber, setOpenPhoneNumber] = useState(false)
   const [openAddPhoneNumber, setOpenAddPhoneNumber] = useState(false)
@@ -48,6 +49,7 @@ const ActionRow = ({ lead, actions }) => {
     setOpenAddCommentModal(true)
   }
   console.log("action_row_lead", lead)
+  const navigate = useNavigate()
 
   const leadActions = useSelector((state) => state.leadAction)
 
@@ -227,6 +229,9 @@ const ActionRow = ({ lead, actions }) => {
         variant="contained"
         size="medium"
         color="secondary"
+        onClick={() => {
+          navigate(`/view-details/${lead._id}`)
+        }}
       >
         {actions[8]}
       </Button>

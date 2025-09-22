@@ -332,3 +332,25 @@ export const getFilteredLeads = async (filterData) => {
 
   return data
 }
+
+export const getLeadInfoById = async ({ queryKey }) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  const response = await fetch(
+    backendBaseUrl +
+      "/api/leads/get-lead-info-by-id?leadId=" +
+      queryKey[1].leadId,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+  if (!response.ok) {
+    let error = new Error("Error whule getting filtered data.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  let data = await response.json()
+  return data
+}

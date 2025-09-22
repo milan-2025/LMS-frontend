@@ -100,7 +100,7 @@ const SignUp = () => {
   const navigate = useNavigate()
   const { mutate, isError, isPending, error } = useMutation({
     mutationFn: signupUser,
-    retry: false,
+    retry: 0,
     onSuccess: (data) => {
       console.log("data", data)
       dispatch(stopLoader())

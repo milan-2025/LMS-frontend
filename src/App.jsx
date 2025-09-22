@@ -30,6 +30,7 @@ import {
   setLeadActionsExpirationTime,
 } from "./util/leadExpirationTime"
 import { startLoader, stopLoader } from "./store/loaderSlice"
+import ViewLeadDetails from "./pages/ViewLeadDetails"
 
 function App() {
   // const dispatch = useDispatch();
@@ -70,6 +71,19 @@ function App() {
           {
             path: "/leads",
             element: <Leads />,
+            loader: async () => {
+              dispatch(startLoader())
+              let chk = await isLoggedIn()
+              dispatch(stopLoader())
+              if (!chk) {
+                return redirect("/")
+              }
+              return null
+            },
+          },
+          {
+            path: "/view-details/:leadId",
+            element: <ViewLeadDetails />,
             loader: async () => {
               dispatch(startLoader())
               let chk = await isLoggedIn()

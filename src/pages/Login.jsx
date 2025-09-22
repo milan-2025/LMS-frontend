@@ -96,7 +96,7 @@ const Login = () => {
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: loginUser,
-    retry: false,
+    retry: 0,
     onSuccess: (data) => {
       console.log("user logged in successfully")
       // console.log("data", data)
