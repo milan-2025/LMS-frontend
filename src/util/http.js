@@ -352,5 +352,5 @@ export const getLeadInfoById = async ({ queryKey }) => {
     throw error
   }
   let data = await response.json()
-  return data
+  return data.lead
 }
