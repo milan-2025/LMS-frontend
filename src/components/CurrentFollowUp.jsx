@@ -4,6 +4,10 @@ import { getFollowUPInfo } from "../util/http"
 import { useDispatch } from "react-redux"
 import { startLoader, stopLoader } from "../store/loaderSlice"
 import { showAlert } from "../store/alertSlice"
+import dayjs, { tz } from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+import { getStoredFollowUpIds } from "../util/followups"
 
 const CurrentFollowUP = ({ leadId }) => {
   const dispatch = useDispatch()
@@ -35,17 +39,52 @@ const CurrentFollowUP = ({ leadId }) => {
       })
     )
   }
+  let selectedTzone = ""
+  let isFollowupDue = false
   if (data) {
     dispatch(stopLoader())
     console.log("data of follow up----", data)
+    if (data.followup) {
+      const timezones = [
+        { name: "PST", id: "America/Los_Angeles" },
+        { name: "MST", id: "America/Denver" },
+        { name: "CST", id: "America/Chicago" },
+        { name: "EST", id: "America/New_York" },
+      ]
+      selectedTzone = timezones.find((item) => {
+        return (
+          item.name.toLocaleLowerCase() ==
+          data.followup.timeZone.toLocaleLowerCase()
+        )
+      }).id
+
+      let followupIds = getStoredFollowUpIds()
+      if (followupIds.includes(data.followup.lead)) {
+        isFollowupDue = true
+      }
+    }
   }
 
   return (
     <Grid size={12} textAlign={"center"}>
-      <Typography color="text.main" variant="body2">
-        Current Follow Up
+      <Typography mb={"0.7rem"} color="text.main" variant="body1">
+        Follow Up On
       </Typography>
-      <Typography variant="body2">abcd</Typography>
+      {data && data.followup ? (
+        <Typography
+          color={isFollowupDue ? "error.light" : "primary"}
+          variant="body2"
+        >
+          {dayjs(data.followup.date)
+            .tz(selectedTzone)
+            .format("DD-MM-YYYY hh:mm A")}
+          <span style={{ paddingLeft: "0.7rem" }}>
+            {data.followup.timeZone.toUpperCase()}
+          </span>
+        </Typography>
+      ) : (
+        <Typography variant="body2">Not Set</Typography>
+      )}
     </Grid>
   )
 }

@@ -146,7 +146,7 @@ const SetFollowUp = ({ timeZone, leadId }) => {
       </Grid>
       <Grid mt={"1rem"} container justifyContent={"center"} size={12}>
         <Grid size={11} mb={"0.5rem"} textAlign={"left"}>
-          <Typography variant="subtitle1">Time Zone: PST</Typography>
+          <Typography variant="subtitle1">Time Zone: {timeZone}</Typography>
         </Grid>
         {/* <PhoneNumberDisplay phoneNumber={phoneNumber} comment={"Default"} /> */}
 

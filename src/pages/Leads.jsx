@@ -92,10 +92,7 @@ const Leads = () => {
 
   if (uploading) {
     dispatch(startLoader())
-  } else {
-    dispatch(stopLoader())
   }
-
   const handleFileChange = (files) => {
     const file = files[0]
     if (!validateExcelFile(file)) {
