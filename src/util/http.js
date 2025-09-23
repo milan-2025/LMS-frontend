@@ -263,7 +263,7 @@ export const getFilteredOptions = async ({ queryKey }) => {
     },
   })
   if (!response.ok) {
-    let error = new Error("Error whule getting filtered options.")
+    let error = new Error("Error while getting filtered options.")
     error.code = response.status
     error.info = await response.json()
     throw error
@@ -309,7 +309,7 @@ export const getFilteredLeads = async (filterData) => {
     },
   })
   if (!response.ok) {
-    let error = new Error("Error whule getting filtered data.")
+    let error = new Error("Error while getting filtered data.")
     error.code = response.status
     error.info = await response.json()
     throw error
@@ -346,11 +346,33 @@ export const getLeadInfoById = async ({ queryKey }) => {
     }
   )
   if (!response.ok) {
-    let error = new Error("Error whule getting filtered data.")
+    let error = new Error("Error while getting filtered data.")
     error.code = response.status
     error.info = await response.json()
     throw error
   }
   let data = await response.json()
   return data.lead
+}
+
+export const getFollowUPInfo = async ({ queryKey }) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  const response = await fetch(
+    backendBaseUrl +
+      "/api/follow-up/get-follow-up-info?leadId=" +
+      queryKey[2].leadId,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+  if (!response.ok) {
+    let error = new Error("Error while getting filtered data.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  let data = await response.json()
+  return data
 }

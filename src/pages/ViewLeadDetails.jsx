@@ -8,6 +8,7 @@ import { startLoader, stopLoader } from "../store/loaderSlice"
 import { showAlert } from "../store/alertSlice"
 
 import SetFollowUp from "../components/SetFollowUP"
+import CurrentFollowUP from "../components/CurrentFollowUp"
 
 const ViewLeadDetails = () => {
   const { leadId } = useParams()
@@ -62,9 +63,7 @@ const ViewLeadDetails = () => {
               p={"1.3rem"}
               size={12}
             >
-              {data && (
-                <SetFollowUp leadId={data._id} timeZone={data.timeZone} />
-              )}
+              {data && <CurrentFollowUP leadId={data._id} />}
             </Grid>
             <Grid
               borderRadius={"1.2rem"}
