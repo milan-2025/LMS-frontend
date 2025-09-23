@@ -1,5 +1,5 @@
 import { Box, Tab, Tabs } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { resetFilters, setFiltersApplied, setPage } from "../store/leadData"
@@ -7,13 +7,15 @@ import { resetFilters, setFiltersApplied, setPage } from "../store/leadData"
 const LeadTabs = ({ tabValue, setTabValue }) => {
   const tabValues = ["New", "Follow Ups"]
   const [searchParams, setSearchParams] = useSearchParams()
-  if (searchParams.has("followUp")) {
-    const followup = searchParams.get("followUp")
-    if (followup == "true") {
-      setTabValue("Follow Ups")
-      setSearchParams({ followup: "false" })
+  useEffect(() => {
+    if (searchParams.has("followUp")) {
+      const followup = searchParams.get("followUp")
+      if (followup == "true") {
+        setTabValue("Follow Ups")
+        setSearchParams({ followup: "false" })
+      }
     }
-  }
+  }, [])
   const dispatch = useDispatch()
   const handleChange = (event, newValue) => {
     setTabValue(newValue)
