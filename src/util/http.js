@@ -376,3 +376,43 @@ export const getFollowUPInfo = async ({ queryKey }) => {
   let data = await response.json()
   return data
 }
+
+export const getResponses = async ({ queryKey }) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  const response = await fetch(
+    backendBaseUrl + "/api/leads/get-responses?leadId=" + queryKey[2].leadId,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+  if (!response.ok) {
+    let error = new Error("Error while getting responses.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  let data = await response.json()
+  return data
+}
+
+export const getComments = async ({ queryKey }) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  const response = await fetch(
+    backendBaseUrl + "/api/leads/get-comments?leadId=" + queryKey[2].leadId,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+  if (!response.ok) {
+    let error = new Error("Error while getting comments.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  let data = await response.json()
+  return data
+}

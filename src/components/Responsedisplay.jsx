@@ -57,7 +57,7 @@ const ResponseDisplay = ({
       )
       queryClient
         .invalidateQueries({
-          queryKey: ["leads"],
+          queryKey: ["leads", "responses"],
         })
         .then(() => {
           dispatch(stopLoader())

@@ -1,9 +1,14 @@
 import { Button, Grid, Typography } from "@mui/material"
+import CopyPhoneNumberModal from "./CopyPhoneNumberModal"
+import { useState } from "react"
 
 const LeadInformation = ({ data }) => {
+  const [openViewPhoneNumbers, setOpenViewPhoneNumbers] = useState(false)
+  const [openViewEmails, setOpenViewEmails] = useState(false)
+
   return (
     data && (
-      <Grid size={8}>
+      <>
         <Grid size={12}>
           <Typography variant="h5">Lead Details</Typography>
           <Typography color="text.main" variant="subtitle2">
@@ -110,6 +115,9 @@ const LeadInformation = ({ data }) => {
                 sx={{
                   cursor: "pointer",
                 }}
+                onClick={() => {
+                  setOpenViewPhoneNumbers(true)
+                }}
               >
                 View More
               </Typography>
@@ -133,6 +141,9 @@ const LeadInformation = ({ data }) => {
                 variant="caption"
                 sx={{
                   cursor: "pointer",
+                }}
+                onClick={() => {
+                  setOpenViewEmails(true)
                 }}
               >
                 View More
@@ -175,16 +186,16 @@ const LeadInformation = ({ data }) => {
               </Typography>
               <Typography variant="body2">{data.status}</Typography>
               {/* <Typography
-              ml={"0.1rem"}
-              color="primary"
-              size="small"
-              variant="caption"
-              sx={{
-                cursor: "pointer",
-              }}
-            >
-              View More
-            </Typography> */}
+            ml={"0.1rem"}
+            color="primary"
+            size="small"
+            variant="caption"
+            sx={{
+              cursor: "pointer",
+            }}
+          >
+            View More
+          </Typography> */}
             </Grid>
           </Grid>
 
@@ -222,7 +233,26 @@ const LeadInformation = ({ data }) => {
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+
+        {openViewPhoneNumbers && (
+          <CopyPhoneNumberModal
+            openModal={openViewPhoneNumbers}
+            setOpenModal={setOpenViewPhoneNumbers}
+            phoneNumber={data.phoneNumber}
+            leadId={data._id}
+            isEmail={false}
+          />
+        )}
+        {openViewEmails && (
+          <CopyPhoneNumberModal
+            openModal={openViewEmails}
+            setOpenModal={setOpenViewEmails}
+            phoneNumber={data.email}
+            leadId={data._id}
+            isEmail={true}
+          />
+        )}
+      </>
     )
   )
 }

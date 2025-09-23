@@ -1,14 +1,15 @@
-import { Button, Grid, Typography } from "@mui/material"
+import { Button, Grid, Typography, useTheme } from "@mui/material"
 import LeadInformation from "../components/LeadInformation"
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
-import { getLeadInfoById } from "../util/http"
+import { getComments, getLeadInfoById, getResponses } from "../util/http"
 import { useDispatch } from "react-redux"
 import { startLoader, stopLoader } from "../store/loaderSlice"
 import { showAlert } from "../store/alertSlice"
 
 import SetFollowUp from "../components/SetFollowUP"
 import CurrentFollowUP from "../components/CurrentFollowUp"
+import HistoryContainer from "../components/HistoryContainer"
 
 const ViewLeadDetails = () => {
   const { leadId } = useParams()
@@ -45,6 +46,7 @@ const ViewLeadDetails = () => {
     dispatch(stopLoader())
     console.log("data for lead  by id----", data)
   }
+  const theme = useTheme()
   return (
     <>
       <Grid container justifyContent={"center"}>
@@ -55,7 +57,53 @@ const ViewLeadDetails = () => {
           container
           size={10}
         >
-          {data && <LeadInformation data={data} />}
+          {data && (
+            <Grid size={8}>
+              <LeadInformation data={data} />
+              <Grid
+                mt={"1.8rem"}
+                bgcolor={"secondary.main"}
+                // height={300}
+                size={12}
+                borderRadius={"1.2rem"}
+                p={3}
+              >
+                <HistoryContainer
+                  // leadId={data._id}
+                  historyTitle={"Response History"}
+                  queryKey={[
+                    "leads",
+                    "responses",
+                    {
+                      leadId: data._id,
+                    },
+                  ]}
+                  queryFn={getResponses}
+                />
+              </Grid>
+              <Grid
+                mt={"1.8rem"}
+                bgcolor={"secondary.main"}
+                // height={300}
+                size={12}
+                borderRadius={"1.2rem"}
+                p={3}
+              >
+                <HistoryContainer
+                  // leadId={data._id}
+                  historyTitle={"Comment History"}
+                  queryKey={[
+                    "leads",
+                    "comments",
+                    {
+                      leadId: data._id,
+                    },
+                  ]}
+                  queryFn={getComments}
+                />
+              </Grid>
+            </Grid>
+          )}
           <Grid spacing={4} container size={4}>
             <Grid
               borderRadius={"1.2rem"}
