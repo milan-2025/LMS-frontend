@@ -163,17 +163,20 @@ const LeadInformation = ({ data }) => {
               <Typography variant="body2">
                 {data.contactPerson ? data.contactPerson : "NA"}
               </Typography>
-              <Typography
-                ml={"0.1rem"}
-                color="primary"
-                size="small"
-                variant="caption"
-                sx={{
-                  cursor: "pointer",
-                }}
-              >
-                Add Name
-              </Typography>
+              {!data.contactPerson && (
+                <Typography
+                  ml={"0.1rem"}
+                  color="primary"
+                  size="small"
+                  variant="caption"
+                  sx={{
+                    cursor: "pointer",
+                  }}
+                  // onClick={handleAddName}
+                >
+                  Add Name
+                </Typography>
+              )}
             </Grid>
             <Grid size={6}>
               <Typography

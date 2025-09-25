@@ -10,6 +10,7 @@ import { showAlert } from "../store/alertSlice"
 import SetFollowUp from "../components/SetFollowUP"
 import CurrentFollowUP from "../components/CurrentFollowUp"
 import HistoryContainer from "../components/HistoryContainer"
+import AddPhoneNumber from "../components/AddPhoneNumber"
 
 const ViewLeadDetails = () => {
   const { leadId } = useParams()
@@ -123,6 +124,28 @@ const ViewLeadDetails = () => {
                 <SetFollowUp leadId={data._id} timeZone={data.timeZone} />
               )}
             </Grid>
+            {data && (
+              <Grid
+                borderRadius={"1.2rem"}
+                bgcolor={"secondary.main"}
+                p={"1.3rem"}
+                size={12}
+              >
+                {" "}
+                <AddPhoneNumber leadId={data._id} isEmail={false} />{" "}
+              </Grid>
+            )}
+            {data && (
+              <Grid
+                borderRadius={"1.2rem"}
+                bgcolor={"secondary.main"}
+                p={"1.3rem"}
+                size={12}
+              >
+                {" "}
+                <AddPhoneNumber leadId={data._id} isEmail={true} />{" "}
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Grid>

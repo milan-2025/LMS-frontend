@@ -64,24 +64,34 @@ const AddPhoneNumberModal = ({
     retry: 0,
     onSuccess: (data) => {
       //
-      dispatch(stopLoader())
-      queryClient.invalidateQueries({
-        queryKey: ["phoneNumbers", { leadId: leadId }],
-      })
-      dispatch(
-        addLeadAction({
-          leadId: leadId,
-          name: !isEmail ? "Add Phone Number" : "Add Email",
-          isCompleted: true,
+      queryClient
+        .invalidateQueries({
+          queryKey: ["leads"],
         })
-      )
-      dispatch(
-        showAlert({
-          isVisible: true,
-          severity: "success",
-          message: data.message,
+        .then(() => {
+          queryClient
+            .invalidateQueries({
+              queryKey: ["phoneNumbers"],
+            })
+            .then(() => {
+              dispatch(stopLoader())
+
+              dispatch(
+                addLeadAction({
+                  leadId: leadId,
+                  name: !isEmail ? "Add Phone Number" : "Add Email",
+                  isCompleted: true,
+                })
+              )
+              dispatch(
+                showAlert({
+                  isVisible: true,
+                  severity: "success",
+                  message: data.message,
+                })
+              )
+            })
         })
-      )
     },
   })
   const dispatch = useDispatch()

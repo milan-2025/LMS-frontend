@@ -45,7 +45,8 @@ const CopyPhoneNumberModal = ({
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["phoneNumbers", { leadId: leadId, isEmail: isEmail }],
     queryFn: getPhoneNumbers,
-    staleTime: Infinity,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   })
   const dispatch = useDispatch()
   if (isLoading) {
