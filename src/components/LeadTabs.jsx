@@ -15,7 +15,7 @@ const LeadTabs = ({ tabValue, setTabValue }) => {
         setSearchParams({ followup: "false" })
       }
     }
-  }, [])
+  }, [searchParams])
   const dispatch = useDispatch()
   const handleChange = (event, newValue) => {
     setTabValue(newValue)

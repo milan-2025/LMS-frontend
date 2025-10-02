@@ -48,16 +48,10 @@ const ResponseDisplay = ({
         leadId: leadId,
         response: response,
       })
-      dispatch(
-        addLeadAction({
-          leadId: leadId,
-          name: "Add Response",
-          isCompleted: true,
-        })
-      )
+
       queryClient
         .invalidateQueries({
-          queryKey: ["leads", "responses"],
+          queryKey: ["leads"],
         })
         .then(() => {
           dispatch(stopLoader())
@@ -66,6 +60,13 @@ const ResponseDisplay = ({
               isVisible: true,
               severity: "success",
               message: data.message,
+            })
+          )
+          dispatch(
+            addLeadAction({
+              leadId: leadId,
+              name: "Add Response",
+              isCompleted: true,
             })
           )
           handleclose()
