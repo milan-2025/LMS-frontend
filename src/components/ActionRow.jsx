@@ -11,11 +11,17 @@ import CopyPhoneNumberModal from "./CopyPhoneNumberModal"
 import { useEffect, useState } from "react"
 import AddPhoneNumberModal from "./AddPhoneNumberModal"
 import SetFollowUpModal from "./SetFollowUpModal"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import MyDialog from "./MyDialog"
 import ResponseDisplay from "./Responsedisplay"
 import AddCommentModal from "./AddCommentModal"
-import { useNavigate } from "react-router-dom"
+import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment"
+import { data, useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
+import { addHotLead, chkHotLead } from "../util/http"
+import { startLoader, stopLoader } from "../store/loaderSlice"
+import { showAlert } from "../store/alertSlice"
+import HotLeadDialog from "./HotLeadDialog"
 const ActionRow = ({ lead, actions }) => {
   const [openPhoneNumber, setOpenPhoneNumber] = useState(false)
   const [openAddPhoneNumber, setOpenAddPhoneNumber] = useState(false)
@@ -48,6 +54,103 @@ const ActionRow = ({ lead, actions }) => {
   const handleAddCommentModal = () => {
     setOpenAddCommentModal(true)
   }
+
+  const [isHotLead, setIsHotLead] = useState(false)
+  const [openHotLead, setOpenHotLead] = useState(false)
+  const handleHotLeadClose = (event, reason) => {
+    if ((reason && reason === "backdropClick") || reason === "escapeKeyDown") {
+      return
+    }
+    setOpenHotLead(false)
+  }
+
+  const handleHotLeadClicked = () => {
+    // setOpenAddCommentModal(true)
+    // check if it is already present in hot leads
+    // chkHotLeadMutate({
+    //   leadId: lead._id,
+    // })
+
+    // if not in hot leads then add in hot leads
+    if (!isHotLead) {
+      addHotLeadMutate({
+        leadId: lead._id,
+      })
+    } else {
+      // open confirm delete modal
+      setOpenHotLead(true)
+    }
+  }
+  const {
+    mutate: chkHotLeadMutate,
+    isPending,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: chkHotLead,
+    retry: 0,
+    onSuccess: (data) => {
+      console.log("data-chk", data)
+      dispatch(stopLoader())
+      setIsHotLead(data.hotLeadIncludes)
+      // dispatch(show)
+    },
+  })
+  const dispatch = useDispatch()
+  if (isPending) {
+    dispatch(startLoader())
+  }
+  if (isError) {
+    dispatch(stopLoader())
+    dispatch(
+      showAlert({
+        isVisible: true,
+        message: error.info?.error || "Error while checking lead.",
+        severity: "error",
+      })
+    )
+  }
+
+  const {
+    mutate: addHotLeadMutate,
+    isPending: addHotLeadPending,
+    isError: addHotLeadIsError,
+    error: addHotLeadError,
+  } = useMutation({
+    mutationFn: addHotLead,
+    retry: 0,
+    onSuccess: () => {
+      setIsHotLead(true)
+      dispatch(
+        showAlert({
+          isVisible: true,
+          severity: "success",
+          message: "Lead added to Hot Leads",
+        })
+      )
+    },
+  })
+
+  if (addHotLeadPending) {
+    dispatch(startLoader())
+  }
+  if (addHotLeadIsError) {
+    dispatch(stopLoader())
+    dispatch(
+      showAlert({
+        isVisible: true,
+        message: addHotLeadError.info?.error || "Error while adding lead.",
+        severity: "error",
+      })
+    )
+  }
+
+  useEffect(() => {
+    chkHotLeadMutate({
+      leadId: lead._id,
+    })
+  }, [])
+
   console.log("action_row_lead", lead)
   const navigate = useNavigate()
 
@@ -225,6 +328,18 @@ const ActionRow = ({ lead, actions }) => {
         sx={{
           mx: 2,
         }}
+        startIcon={<LocalFireDepartmentIcon />}
+        variant="contained"
+        size="medium"
+        color={isHotLead ? "warning" : "secondary"}
+        onClick={handleHotLeadClicked}
+      >
+        {actions[8]}
+      </Button>
+      <Button
+        sx={{
+          mx: 2,
+        }}
         startIcon={<InfoIcon />}
         variant="contained"
         size="medium"
@@ -233,8 +348,15 @@ const ActionRow = ({ lead, actions }) => {
           navigate(`/view-details/${lead._id}`)
         }}
       >
-        {actions[8]}
+        {actions[9]}
       </Button>
+      <HotLeadDialog
+        open={openHotLead}
+        handleClose={handleHotLeadClose}
+        shipper={lead.shipper}
+        leadId={lead._id}
+        setIsHotLead={setIsHotLead}
+      />
       <CopyPhoneNumberModal
         openModal={openPhoneNumber}
         setOpenModal={setOpenPhoneNumber}

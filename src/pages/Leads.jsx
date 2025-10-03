@@ -132,7 +132,7 @@ const Leads = () => {
 
   const theme = useTheme()
 
-  const [tabValue, setTabValue] = useState("New")
+  const [tabValue, setTabValue] = useState("All")
 
   // const [filtersApplied, setFiltersApplied] = useState(false)
 

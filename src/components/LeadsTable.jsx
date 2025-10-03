@@ -1,4 +1,5 @@
 import {
+  Button,
   Grid,
   Pagination,
   Table,
@@ -22,6 +23,7 @@ import dayjs, { tz } from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 import { setPage } from "../store/leadData"
+import LeadBulckActionButton from "./LeadBulckActionButton"
 
 const LeadsTable = ({ tabValue }) => {
   const theme = useTheme()
@@ -79,13 +81,13 @@ const LeadsTable = ({ tabValue }) => {
   let fetchedLeads = null
   if (data) {
     dispatch(stopLoader())
-    dispatch(
-      showAlert({
-        isVisile: true,
-        severity: "success",
-        message: "Leads fetched successfully.",
-      })
-    )
+    // dispatch(
+    //   showAlert({
+    //     isVisile: true,
+    //     severity: "success",
+    //     message: "Leads fetched successfully.",
+    //   })
+    // )
     console.log("leads", data)
     let actions = [
       "Copy Phone Number",
@@ -96,6 +98,7 @@ const LeadsTable = ({ tabValue }) => {
       "Add Phone Number",
       "Add Response",
       "Add Comment",
+      "Hot Lead",
       "View Details",
     ]
 
@@ -266,6 +269,9 @@ const LeadsTable = ({ tabValue }) => {
             }}
             color="primary"
           />
+          <Grid size={12} textAlign={"right"}>
+            <LeadBulckActionButton />
+          </Grid>
         </Grid>
       )}
     </>

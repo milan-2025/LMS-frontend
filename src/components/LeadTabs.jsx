@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { resetFilters, setFiltersApplied, setPage } from "../store/leadData"
 
 const LeadTabs = ({ tabValue, setTabValue }) => {
-  const tabValues = ["New", "Follow Ups"]
+  const tabValues = ["All", "Follow Ups", "Hot Leads"]
   const [searchParams, setSearchParams] = useSearchParams()
   useEffect(() => {
     if (searchParams.has("followUp")) {

@@ -71,6 +71,7 @@ export const getLeads = async ({ queryKey }) => {
     throw error
   }
   const queryData = queryKey[1]
+  console.log("query tab value-", queryData.tabValue)
   let response = null
   if (queryData.tabValue == "Follow Ups") {
     response = await fetch(
@@ -81,9 +82,19 @@ export const getLeads = async ({ queryKey }) => {
         },
       }
     )
-  } else {
+  } else if (queryData.tabValue == "All") {
     response = await fetch(
       backendBaseUrl + `/api/leads/get-leads?page=${queryData.page}&limit=5`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+  } else if (queryData.tabValue == "Hot Leads") {
+    response = await fetch(
+      backendBaseUrl +
+        `/api/leads/get-hot-leads?page=${queryData.page}&limit=5`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -107,6 +118,17 @@ export const getLeads = async ({ queryKey }) => {
       }
     })
     delete data.pendingFollowUps
+    data.leads = leads
+    return data
+  }
+  if (queryData.tabValue == "Hot Leads") {
+    let data = await response.json()
+    let leads = data.hotLeads.map((item) => {
+      return {
+        ...item.lead,
+      }
+    })
+    delete data.hotLeads
     data.leads = leads
     return data
   }
@@ -281,6 +303,16 @@ export const getFilteredOptions = async ({ queryKey }) => {
     })
     return mappedOptions
   }
+  if (queryKey[1].tabValue == "Hot Leads") {
+    let mappedOptions = data.options.map((item) => {
+      let field = queryKey[1].field
+      return {
+        name: item.lead[field],
+        id: item._id,
+      }
+    })
+    return mappedOptions
+  }
   let mappedOptions = data.options.map((item) => {
     let field = queryKey[1].field
     return {
@@ -298,6 +330,9 @@ export const getFilteredLeads = async (filterData) => {
 
   if (filterData.tabValue == "Follow Ups") {
     url = url + "/follow-up"
+  }
+  if (filterData.tabValue == "Hot Leads") {
+    url = url + "/hot-leads"
   }
 
   const response = await fetch(backendBaseUrl + url, {
@@ -325,6 +360,18 @@ export const getFilteredLeads = async (filterData) => {
       }
     })
     delete data.filteredFollowUps
+    data.filteredLeads = leads
+    return data
+  }
+  if (filterData.tabValue == "Hot Leads") {
+    let data = await response.json()
+    console.log("fl-http", data)
+    let leads = data.filteredHotLeads.map((item) => {
+      return {
+        ...item.lead,
+      }
+    })
+    delete data.filteredHotLeads
     data.filteredLeads = leads
     return data
   }
@@ -415,4 +462,63 @@ export const getComments = async ({ queryKey }) => {
   }
   let data = await response.json()
   return data
+}
+
+export const chkHotLead = async (hotLeadData) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  const response = await fetch(backendBaseUrl + "/api/leads/chk-hot-lead", {
+    method: "POST",
+    body: JSON.stringify(hotLeadData),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    let error = new Error("Error whule adding the hot lead.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  // return { message: "Lead added to Hot Leads." }
+  let data = await response.json()
+  return data
+}
+
+export const addHotLead = async (hotLeadData) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  const response = await fetch(backendBaseUrl + "/api/leads/add-hot-lead", {
+    method: "POST",
+    body: JSON.stringify(hotLeadData),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    let error = new Error("Error whule adding the hot lead.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  return { message: "Lead added to Hot Leads." }
+}
+
+export const removeHotLead = async (hotLeadData) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  const response = await fetch(backendBaseUrl + "/api/leads/remove-hot-lead", {
+    method: "POST",
+    body: JSON.stringify(hotLeadData),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    let error = new Error("Error whule adding the hot lead.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  return { message: "Lead removed from Hot Leads." }
 }
