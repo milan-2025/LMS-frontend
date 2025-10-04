@@ -106,7 +106,7 @@ export default function Navbar() {
         >
           <Toolbar>
             <Typography variant="h6" component="div">
-              Univasion CRM
+              LMS
             </Typography>
 
             {/* <NavLink> */}
