@@ -59,9 +59,9 @@ const AddPhoneNumberModal = ({
     return isNotEmpty(value)
   })
 
-  const { mutate, isError, error, isPending } = useMutation({
+  let { mutate, isError, error, isPending, reset } = useMutation({
     mutationFn: addPhoneNumber,
-    retry: 0,
+    retry: false,
     onSuccess: (data) => {
       //
       queryClient
@@ -107,6 +107,8 @@ const AddPhoneNumberModal = ({
         message: error.info?.error || "Error while adding phone number.",
       })
     )
+    isError = false
+    reset()
   }
   const addNumber = () => {
     if (

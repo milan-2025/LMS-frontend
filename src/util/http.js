@@ -522,3 +522,32 @@ export const removeHotLead = async (hotLeadData) => {
   }
   return { message: "Lead removed from Hot Leads." }
 }
+
+export const getBulkEmails = async (bulkEmailData) => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  let url = "/api/leads/get-bulk-emails"
+  if (bulkEmailData.tabValue == "Follow Ups") {
+    url += "-follow-ups"
+  }
+  if (bulkEmailData.tabValue == "Hot Leads") {
+    url += "-hot-leads"
+  }
+  const response = await fetch(backendBaseUrl + url, {
+    method: "POST",
+    body: JSON.stringify(bulkEmailData),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    let error = new Error("Error while fetching bulk emails.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  let data = await response.json()
+  console.log("bulk email data---", data)
+
+  return data
+}

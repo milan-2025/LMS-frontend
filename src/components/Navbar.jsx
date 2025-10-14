@@ -4,16 +4,25 @@ import Box from "@mui/material/Box"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
-import { NavLink, useNavigate } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import "./Navbar.css"
 import { useTheme } from "@mui/material/styles"
 import { useDispatch, useSelector } from "react-redux"
 import { handleLogout } from "../store/userSlice"
 import { useEffect, useRef, useState } from "react"
-import { Grid } from "@mui/material"
+import { Drawer, Grid, IconButton, ListItemIcon } from "@mui/material"
 import TimeZonesCurrentTime from "./TimeZonesCurrentTime"
 // import IconButton from '@mui/material/IconButton';
-// import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu"
+import List from "@mui/material/List"
+// import Divider from '@mui/material/Divider';
+import ListItem from "@mui/material/ListItem"
+import ListItemButton from "@mui/material/ListItemButton"
+// import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from "@mui/material/ListItemText"
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd"
+import AssessmentIcon from "@mui/icons-material/Assessment"
+import DashboardIcon from "@mui/icons-material/Dashboard"
 
 export default function Navbar() {
   const theme = useTheme()
@@ -23,6 +32,10 @@ export default function Navbar() {
   const handleLogoutButton = () => {
     dispatch(handleLogout())
     navigate("/")
+  }
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const toggleDrawer = (newState) => {
+    setOpenDrawer(newState)
   }
   useEffect(() => {
     if (!token) {
@@ -94,6 +107,24 @@ export default function Navbar() {
       window.removeEventListener("resize", handleResize)
     }
   }, [])
+
+  const links = [
+    {
+      text: "Leads",
+      link: "/leads",
+      icon: <AssignmentIndIcon />,
+    },
+    {
+      text: "Reports",
+      link: "/reports",
+      icon: <AssessmentIcon />,
+    },
+    {
+      text: "Admin Dashboard",
+      link: "/admin-dashoard",
+      icon: <DashboardIcon />,
+    },
+  ]
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -113,19 +144,59 @@ export default function Navbar() {
             <TimeZonesCurrentTime />
             {/* </NavLink> */}
             {content}
-            {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu" 
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton> */}
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ ml: 2 }}
+              onClick={() => {
+                toggleDrawer(true)
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
       </Box>
       <Box sx={{ height: appBarHeight }} />
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => {
+          toggleDrawer(false)
+        }}
+      >
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={() => {
+            toggleDrawer(false)
+          }}
+        >
+          <List>
+            {links.map((item, index) => (
+              <ListItem key={item.text} disablePadding>
+                <Link
+                  to={item.link}
+                  style={{
+                    color: "#ffffff",
+                    textDecoration: "none",
+                  }}
+                >
+                  <ListItemButton>
+                    <ListItemIcon>
+                      {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={item.text} />
+                  </ListItemButton>
+                </Link>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
     </>
   )
 }

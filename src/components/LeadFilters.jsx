@@ -27,16 +27,26 @@ import {
 } from "../store/leadData"
 import { startLoader, stopLoader } from "../store/loaderSlice"
 
-const LeadFilters = ({ tabValue }) => {
+const LeadFilters = ({
+  tabValue,
+  state,
+  setState,
+  timeZone,
+  setTimeZone,
+  commodity,
+  setCommodity,
+  status,
+  setStatus,
+}) => {
   const [showFilters, setShowFilters] = useState(false)
 
   // const [currentField, setCurrentField] = useState(null)
 
   const theme = useTheme()
-  const [state, setState] = useState("")
-  const [timeZone, setTimeZone] = useState("")
-  const [commodity, setCommodity] = useState("")
-  const [status, setStatus] = useState("")
+  // const [state, setState] = useState("")
+  // const [timeZone, setTimeZone] = useState("")
+  // const [commodity, setCommodity] = useState("")
+  // const [status, setStatus] = useState("")
 
   // const [stateKey, setStateKey] = useState(generateRandomKey())
   // const [timeZoneKey, setTimeZoneKey] = useState(generateRandomKey())

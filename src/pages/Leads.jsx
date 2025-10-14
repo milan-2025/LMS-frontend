@@ -134,6 +134,11 @@ const Leads = () => {
 
   const [tabValue, setTabValue] = useState("All")
 
+  const [state, setState] = useState("")
+  const [timeZone, setTimeZone] = useState("")
+  const [commodity, setCommodity] = useState("")
+  const [status, setStatus] = useState("")
+
   // const [filtersApplied, setFiltersApplied] = useState(false)
 
   return (
@@ -167,9 +172,29 @@ const Leads = () => {
             {!uploading && (
               <>
                 <LeadTabs tabValue={tabValue} setTabValue={setTabValue} />
-                <LeadFilters tabValue={tabValue} />
+                <LeadFilters
+                  state={state}
+                  setState={setState}
+                  timeZone={timeZone}
+                  setTimeZone={setTimeZone}
+                  commodity={commodity}
+                  setCommodity={setCommodity}
+                  status={status}
+                  setStatus={setStatus}
+                  tabValue={tabValue}
+                />
                 <Grid size={12}>
-                  <LeadsTable tabValue={tabValue} />
+                  <LeadsTable
+                    state={state}
+                    setState={setState}
+                    timeZone={timeZone}
+                    setTimeZone={setTimeZone}
+                    commodity={commodity}
+                    setCommodity={setCommodity}
+                    status={status}
+                    setStatus={setStatus}
+                    tabValue={tabValue}
+                  />
                 </Grid>
               </>
             )}

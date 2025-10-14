@@ -25,7 +25,17 @@ import timezone from "dayjs/plugin/timezone"
 import { setPage } from "../store/leadData"
 import LeadBulckActionButton from "./LeadBulckActionButton"
 
-const LeadsTable = ({ tabValue }) => {
+const LeadsTable = ({
+  tabValue,
+  state,
+  setState,
+  timeZone,
+  setTimeZone,
+  commodity,
+  setCommodity,
+  status,
+  setStatus,
+}) => {
   const theme = useTheme()
   const dispatch = useDispatch()
   dayjs.extend(utc)
@@ -270,7 +280,17 @@ const LeadsTable = ({ tabValue }) => {
             color="primary"
           />
           <Grid size={12} textAlign={"right"}>
-            <LeadBulckActionButton />
+            <LeadBulckActionButton
+              state={state}
+              setState={setState}
+              timeZone={timeZone}
+              setTimeZone={setTimeZone}
+              commodity={commodity}
+              setCommodity={setCommodity}
+              status={status}
+              setStatus={setStatus}
+              tabValue={tabValue}
+            />
           </Grid>
         </Grid>
       )}

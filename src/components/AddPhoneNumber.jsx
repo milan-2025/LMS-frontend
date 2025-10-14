@@ -39,9 +39,9 @@ const AddPhoneNumber = ({ leadId, isEmail = false }) => {
     return isNotEmpty(value)
   })
 
-  const { mutate, isError, error, isPending } = useMutation({
+  const { mutate, isError, error, isPending, reset } = useMutation({
     mutationFn: addPhoneNumber,
-    retry: 0,
+    retry: false,
     onSuccess: (data) => {
       //
       queryClient
@@ -87,6 +87,8 @@ const AddPhoneNumber = ({ leadId, isEmail = false }) => {
         message: error.info?.error || "Error while adding phone number.",
       })
     )
+    // isError = false
+    reset()
   }
   const addNumber = () => {
     if (
