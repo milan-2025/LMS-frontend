@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getGeneralReport } from "../util/http"
 import { useDispatch } from "react-redux"
 import { startLoader, stopLoader } from "../store/loaderSlice"
-import { showAlert } from "../store/AlertSlice"
+import { showAlert } from "../store/alertSlice"
 import ReportCard from "../components/ReportCard"
 
 // const LIGHT_BLUE = "#e6f7ff" // The color for the lighter bars
