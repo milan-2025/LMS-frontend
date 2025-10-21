@@ -1,8 +1,8 @@
 import { QueryClient } from "@tanstack/react-query"
 import { chkAndReplaceFollowUpIds } from "./followups"
 
-const backendBaseUrl = "http://localhost:3000"
-// const backendBaseUrl = "https://univasion-crm-backend.onrender.com"
+// const backendBaseUrl = "http://localhost:3000"
+const backendBaseUrl = "https://univasion-crm-backend.onrender.com"
 
 export const queryClient = new QueryClient()
 
