@@ -59,30 +59,31 @@ const Leads = () => {
   })
   const dispatch = useDispatch()
 
-  const { mutate, isIdle, isPaused, isPending, isError, error } = useMutation({
-    mutationFn: uploadLeads,
-    retry: 0,
-    onSuccess: (data) => {
-      console.log("success")
-      dispatch(startLoader())
+  const { mutate, isIdle, isPaused, isPending, isError, error, reset } =
+    useMutation({
+      mutationFn: uploadLeads,
+      retry: 0,
+      onSuccess: (data) => {
+        console.log("success")
+        dispatch(startLoader())
 
-      queryClient
-        .invalidateQueries({
-          queryKey: ["leads"],
-        })
-        .then(() => {
-          setUploading(false)
-          // dispatch(stopLoader())
-          dispatch(
-            showAlert({
-              isVisile: true,
-              severity: "success",
-              message: "Leads uploadded successfully.",
-            })
-          )
-        })
-    },
-  })
+        queryClient
+          .invalidateQueries({
+            queryKey: ["leads"],
+          })
+          .then(() => {
+            setUploading(false)
+            // dispatch(stopLoader())
+            dispatch(
+              showAlert({
+                isVisile: true,
+                severity: "success",
+                message: "Leads uploadded successfully.",
+              })
+            )
+          })
+      },
+    })
   if (isIdle) {
     dispatch(startLoader())
   }
@@ -128,11 +129,16 @@ const Leads = () => {
         message: error.info?.error || "Error while uploading leads.",
       })
     )
+    reset()
   }
 
   const theme = useTheme()
 
-  const [tabValue, setTabValue] = useState("All")
+  const [tabValue, setTabValue] = useState(
+    localStorage.getItem("lastTabValue")
+      ? localStorage.getItem("lastTabValue")
+      : "All"
+  )
 
   const [state, setState] = useState("")
   const [timeZone, setTimeZone] = useState("")

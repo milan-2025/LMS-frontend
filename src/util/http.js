@@ -1,8 +1,8 @@
 import { QueryClient } from "@tanstack/react-query"
 import { chkAndReplaceFollowUpIds } from "./followups"
 
-// const backendBaseUrl = "http://localhost:3000"
-const backendBaseUrl = "https://univasion-crm-backend.onrender.com"
+const backendBaseUrl = "http://localhost:3000"
+// const backendBaseUrl = "https://univasion-crm-backend.onrender.com"
 
 export const queryClient = new QueryClient()
 
@@ -549,5 +549,25 @@ export const getBulkEmails = async (bulkEmailData) => {
   let data = await response.json()
   console.log("bulk email data---", data)
 
+  return data
+}
+
+export const getGeneralReport = async () => {
+  const { token } = JSON.parse(localStorage.getItem("token"))
+  const response = await fetch(
+    backendBaseUrl + "/api/reports/get-general-report",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+  if (!response.ok) {
+    let error = new Error("Error while getting report.")
+    error.code = response.status
+    error.info = await response.json()
+    throw error
+  }
+  let data = await response.json()
   return data
 }

@@ -49,6 +49,7 @@ const LeadsTable = ({
   // const [fetchedLeads, setFetchedLeads] = useState(null)
 
   console.log("dispatch page", leadsData.page)
+
   const limit = 5
   let {
     data,
@@ -153,6 +154,15 @@ const LeadsTable = ({
     // console.log("fl", formatedLeads)
     // setFetchedLeads(formatedLeads)
   }
+  useEffect(() => {
+    dispatch(
+      setPage({
+        page: localStorage.getItem("lastPage")
+          ? Number(localStorage.getItem("lastPage"))
+          : 1,
+      })
+    )
+  }, [])
 
   return (
     <>
@@ -269,6 +279,7 @@ const LeadsTable = ({
           <Pagination
             count={data.totalPages}
             page={leadsData.page}
+            // defaultPage={leadsData.page}
             onChange={(e, changedPage) => {
               console.log("cp", changedPage)
               dispatch(
@@ -277,6 +288,8 @@ const LeadsTable = ({
                 })
               )
             }}
+            // siblingCount={0}
+            // boundaryCount={2}
             color="primary"
           />
           <Grid size={12} textAlign={"right"}>

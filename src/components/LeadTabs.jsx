@@ -19,6 +19,7 @@ const LeadTabs = ({ tabValue, setTabValue }) => {
   const dispatch = useDispatch()
   const handleChange = (event, newValue) => {
     setTabValue(newValue)
+    localStorage.setItem("lastTabValue", newValue)
     dispatch(
       setPage({
         page: 1,

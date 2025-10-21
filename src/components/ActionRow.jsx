@@ -86,6 +86,7 @@ const ActionRow = ({ lead, actions }) => {
     isPending,
     isError,
     error,
+    reset: chkHotLeadReset,
   } = useMutation({
     mutationFn: chkHotLead,
     retry: 0,
@@ -109,6 +110,7 @@ const ActionRow = ({ lead, actions }) => {
         severity: "error",
       })
     )
+    chkHotLeadReset()
   }
 
   const {
@@ -116,6 +118,7 @@ const ActionRow = ({ lead, actions }) => {
     isPending: addHotLeadPending,
     isError: addHotLeadIsError,
     error: addHotLeadError,
+    reset: addHotLeadReset,
   } = useMutation({
     mutationFn: addHotLead,
     retry: 0,
@@ -143,6 +146,7 @@ const ActionRow = ({ lead, actions }) => {
         severity: "error",
       })
     )
+    addHotLeadReset()
   }
 
   useEffect(() => {

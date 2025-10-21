@@ -27,6 +27,7 @@ const leadDataSlice = createSlice({
     },
     setPage: (state, action) => {
       state.page = action.payload.page
+      localStorage.setItem("lastPage", action.payload.page)
     },
     setTotalItems: (state, action) => {
       state.totalItems = action.payload.totalItems

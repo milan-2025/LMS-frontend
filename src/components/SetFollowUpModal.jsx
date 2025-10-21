@@ -90,7 +90,7 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
-  const { mutate, isError, isPending, error } = useMutation({
+  const { mutate, isError, isPending, error, reset } = useMutation({
     mutationFn: addFollowUp,
     retry: 0,
     onSuccess: (data) => {
@@ -165,6 +165,7 @@ const SetFollowUpModal = ({ openModal, setOpenModal, timeZone, leadId }) => {
         message: error.info?.error || "Error while setting follow up.",
       })
     )
+    reset()
   }
 
   return (

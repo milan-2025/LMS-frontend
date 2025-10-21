@@ -26,7 +26,7 @@ const HotLeadDialog = ({
     })
   }
   const dispatch = useDispatch()
-  const { mutate, isPending, isError, error } = useMutation({
+  const { mutate, isPending, isError, error, reset } = useMutation({
     mutationFn: removeHotLead,
     retry: 0,
     onSuccess: (data) => {
@@ -61,6 +61,7 @@ const HotLeadDialog = ({
         message: error.info?.error || "Error while removing hot lead.",
       })
     )
+    reset()
   }
   return (
     <>

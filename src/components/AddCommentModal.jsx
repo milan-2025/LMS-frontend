@@ -43,7 +43,7 @@ const AddCommentModal = ({ leadId, openCommentModal, setOpenCommentModal }) => {
     return isNotEmpty(value)
   })
 
-  const { mutate, isPending, isError, error } = useMutation({
+  const { mutate, isPending, isError, error, reset } = useMutation({
     mutationFn: addComment,
     retry: false,
     onSuccess: (data) => {
@@ -86,7 +86,9 @@ const AddCommentModal = ({ leadId, openCommentModal, setOpenCommentModal }) => {
         message: error.info?.error || "Error while adding comment.",
       })
     )
+
     console.log("err", error)
+    reset()
   }
   const handleAddComment = () => {
     if (commentDidEdit && !commentError.chk) {

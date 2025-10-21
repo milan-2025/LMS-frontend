@@ -98,7 +98,7 @@ const SignUp = () => {
     }
   })
   const navigate = useNavigate()
-  const { mutate, isError, isPending, error } = useMutation({
+  const { mutate, isError, isPending, error, reset } = useMutation({
     mutationFn: signupUser,
     retry: 0,
     onSuccess: (data) => {
@@ -151,6 +151,7 @@ const SignUp = () => {
         message: error.info?.error || "An error occurred while sigining up.",
       })
     )
+    reset()
   }
   const [canSignUp, setCanSignUp] = useState(false)
   useEffect(() => {

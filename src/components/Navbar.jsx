@@ -144,18 +144,20 @@ export default function Navbar() {
             <TimeZonesCurrentTime />
             {/* </NavLink> */}
             {content}
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ ml: 2 }}
-              onClick={() => {
-                toggleDrawer(true)
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
+            {token && (
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ ml: 2 }}
+                onClick={() => {
+                  toggleDrawer(true)
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
           </Toolbar>
         </AppBar>
       </Box>

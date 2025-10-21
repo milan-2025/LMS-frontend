@@ -94,7 +94,7 @@ const Login = () => {
   //   return () => clearTimeout(timer) // Clean up the timer
   // }, [])
 
-  const { mutate, isPending, isError, error } = useMutation({
+  const { mutate, isPending, isError, error, reset } = useMutation({
     mutationFn: loginUser,
     retry: 0,
     onSuccess: (data) => {
@@ -146,6 +146,7 @@ const Login = () => {
     )
 
     console.log("error", error)
+    reset()
   }
 
   return (

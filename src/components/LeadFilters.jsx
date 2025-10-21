@@ -58,7 +58,7 @@ const LeadFilters = ({
 
   // const dispatch = useDispatch()
 
-  const { mutate, isPending, isError, error } = useMutation({
+  const { mutate, isPending, isError, error, reset } = useMutation({
     mutationFn: getFilteredLeads,
     retry: 0,
     onSuccess: (data) => {
@@ -89,6 +89,7 @@ const LeadFilters = ({
   if (isError) {
     dispatch(stopLoader())
     console.log("err while filter, ", error)
+    reset()
   }
   const handleReset = () => {
     dispatch(

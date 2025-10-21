@@ -40,7 +40,7 @@ const ResponseDisplay = ({
   }
   const dispatch = useDispatch()
 
-  const { mutate, isPending, error, isError } = useMutation({
+  const { mutate, isPending, error, isError, reset } = useMutation({
     mutationFn: addResponse,
     retry: false,
     onSuccess: (data) => {
@@ -87,6 +87,7 @@ const ResponseDisplay = ({
       })
     )
     console.log("err", error)
+    reset()
   }
 
   const addResponseHandler = () => {
