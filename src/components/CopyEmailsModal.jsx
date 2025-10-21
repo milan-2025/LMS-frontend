@@ -84,7 +84,7 @@ const CopyEmailsModal = ({
         <Grid mb={"0.8rem"} container justifyContent={"center"} size={12}>
           <Grid textAlign={"center"} size={12}>
             <Typography variant="h6">
-              Total Emails: {totalEmails} | Total Leads {totalLeads}
+              there are total {totalLeads} leads having emails.
             </Typography>
           </Grid>
         </Grid>
